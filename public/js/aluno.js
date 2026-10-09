@@ -64,7 +64,9 @@ async function carregarBoletim(alunoId) {
                 <td style="text-align: center; font-weight: 700; color: var(--primary);">${b.mediaFinal.toFixed(2)}</td>
                 <td style="text-align: center; font-weight: 600;">
                     ${b.percentualFrequencia.toFixed(1)}%
-                    ${b.percentualFrequencia < 75.0 ? ' ❌' : ' ✔️'}
+                    ${b.percentualFrequencia < 75.0 
+                        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px;" title="Abaixo do limite LDB (75%)"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' 
+                        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px;" title="Frequência regular"><polyline points="20 6 9 17 4 12"></polyline></svg>'}
                 </td>
                 <td style="text-align: center;">
                     <span class="badge ${badgeClasse}">${b.situacaoDescricao}</span>

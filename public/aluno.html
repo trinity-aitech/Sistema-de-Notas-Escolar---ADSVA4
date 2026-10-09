@@ -9,10 +9,11 @@
 <body>
     <header>
         <div class="logo-area">
-            <div class="logo-icon">🎓</div>
+            <div class="logo-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"/><path d="M18 22V5l-6-3-6 3v17"/><path d="M4 10h4"/><path d="M4 14h4"/><path d="M16 10h4"/><path d="M16 14h4"/></svg>
+            </div>
             <div class="logo-text">
-                <h1>Portal do Aluno</h1>
-                <span>Boletim Acadêmico & Frequência LDB</span>
+                <h1>Sistema de Notas Escolar</h1>
             </div>
         </div>
         <div class="user-badge">
@@ -70,7 +71,7 @@
 
         <!-- Alerta de Risco de Infrequência (LDB) se houver -->
         <div id="alertaLdbContainer" style="display: none;" class="alert alert-warning">
-            <span style="font-size: 1.5rem;">⚠️</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <div>
                 <strong>Atenção à Frequência Escolar (LDB 9.394/96 Art. 24)!</strong>
                 <p>O percentual de frequência está próximo ou abaixo do mínimo de 75% exigido pela legislação nacional para aprovação de ano.</p>
@@ -106,7 +107,7 @@
         </div>
 
         <!-- Card Explicativo das Regras e Legislação -->
-        <div class="card" style="background: #f8fafc; border-left: 4px solid var(--primary);">
+        <div class="card" style="background: rgba(248, 250, 252, 0.95); border-left: 4px solid var(--primary);">
             <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--primary);">Entenda os Critérios de Avaliação e Normas Vigentes</h3>
             <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; padding-left: 1.25rem;">
                 <li><strong>LDB 9.394/1996 (Art. 24, Inciso VI):</strong> Exigida a frequência mínima obrigatória de <strong>75%</strong> do total de horas letivas para aprovação de série/ano.</li>
@@ -118,7 +119,7 @@
     </div>
 
     <footer>
-        Sistema de Notas Escolar &copy; 2026 - Backend Java Puro & PostgreSQL / Supabase
+        Sistema de Notas Escolar &copy; 2026 - Em conformidade com o Art. 24 da LDB 9.394/96 e normas CEE
     </footer>
 
     <script src="js/api.js"></script>

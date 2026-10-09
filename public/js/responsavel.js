@@ -90,7 +90,7 @@ async function carregarDadosFilho(alunoId) {
             freqBar.className = 'progress-bar danger';
             alertaBox.className = 'alert alert-danger';
             alertaBox.innerHTML = `
-                <span style="font-size: 1.5rem;">🚨</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 <div>
                     <strong>ALERTA CRÍTICO: Frequência Abaixo do Mínimo Legal (${freqGeral.toFixed(1)}%)</strong>
                     <p>O aluno atingiu nível de infrequência que acarreta <strong>reprovação por faltas segundo o Art. 24 da LDB</strong>. Favor contatar a direção imediatamente.</p>
@@ -102,7 +102,7 @@ async function carregarDadosFilho(alunoId) {
             freqBar.className = 'progress-bar warning';
             alertaBox.className = 'alert alert-warning';
             alertaBox.innerHTML = `
-                <span style="font-size: 1.5rem;">⚠️</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Aviso de Atenção: Frequência em Limite de Alerta (${freqGeral.toFixed(1)}%)</strong>
                     <p>A presença do estudante está próxima do corte de 75% estipulado pela LDB. Novas faltas não justificadas podem comprometer a aprovação.</p>
