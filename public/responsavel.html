@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal dos Pais & Responsáveis - Acompanhamento Escolar</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">👨‍👩‍👧</div>
+            <div class="logo-text">
+                <h1>Portal da Família</h1>
+                <span>Acompanhamento Pedagógico & Frequência LDB</span>
+            </div>
+        </div>
+        <div class="user-badge">
+            <span id="userName">Maria Mendes (Responsável)</span>
+            <button class="btn-logout" onclick="window.schoolApi.logout()">Sair</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Card de Apresentação e Seleção de Filho -->
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <span class="stat-label">ALUNO DEPENDENTE VINCULADO</span>
+                <h2 id="filhoNome" style="font-size: 1.4rem;">Lucas Mendes</h2>
+                <div style="margin-top: 0.25rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    Matrícula: <strong id="filhoMatricula">2026001</strong> | Turma: <strong id="filhoTurma">9º Ano A (Fundamental)</strong>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span class="badge badge-success" id="badgeSituacaoFilho">Situação Regular</span>
+            </div>
+        </div>
+
+        <!-- Banner de Alerta de Frequência Escolar Preventivo -->
+        <div id="alertaFrequenciaBox" class="alert alert-info" style="display: flex;">
+            <span style="font-size: 1.5rem;">ℹ️</span>
+            <div>
+                <strong>Acompanhamento em Tempo Real da Frequência (Art. 24 da LDB 9.394/96)</strong>
+                <p>O acompanhamento contínuo dos pais é essencial. A legislação brasileira exige <strong>no mínimo 75% de presença</strong> em todas as disciplinas para aprovação de ano.</p>
+            </div>
+        </div>
+
+        <!-- Métricas Rápidas do Dependente -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <span class="stat-label">MÉDIA DE DESEMPENHO</span>
+                <span class="stat-value" id="mediaFilho">8.75</span>
+                <span class="stat-desc" style="color: var(--success);">Excelente rendimento</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">FREQUÊNCIA REGISTRADA</span>
+                <span class="stat-value" id="frequenciaFilho">100%</span>
+                <div class="progress-container">
+                    <div class="ldb-marker" title="Limite mínimo legal da LDB (75%)"></div>
+                    <div class="progress-bar success" id="frequenciaBarFilho" style="width: 100%;"></div>
+                </div>
+                <span class="stat-desc" style="display: flex; justify-content: space-between;">
+                    <span>0%</span>
+                    <span style="font-weight: 700; color: var(--danger);">| 75% LDB</span>
+                    <span>100%</span>
+                </span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">FALTAS REGISTRADAS</span>
+                <span class="stat-value" id="faltasFilho">0</span>
+                <span class="stat-desc">Faltas acumuladas no período</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">TOTAL DE HORAS/AULAS</span>
+                <span class="stat-value" id="aulasFilho">8</span>
+                <span class="stat-desc">Carga horária ministrada</span>
+            </div>
+        </div>
+
+        <!-- Boletim Acadêmico das Disciplinas -->
+        <div class="card">
+            <div class="card-title">
+                <span>Rendimento por Disciplina</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Disciplina</th>
+                            <th style="text-align: center;">1º Bim</th>
+                            <th style="text-align: center;">2º Bim</th>
+                            <th style="text-align: center;">3º Bim</th>
+                            <th style="text-align: center;">4º Bim</th>
+                            <th style="text-align: center;">Média Anual</th>
+                            <th style="text-align: center;">Exame Final</th>
+                            <th style="text-align: center;">Média Final</th>
+                            <th style="text-align: center;">Presença (%)</th>
+                            <th style="text-align: center;">Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaBoletimResponsavel">
+                        <tr><td colspan="10" style="text-align: center;">Carregando notas...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Canal de Contato com a Escola -->
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Dúvidas ou Justificativas de Falta?</h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                    Envie atestados médicos ou agende um atendimento com a coordenação pedagógica.
+                </p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Mensagem enviada para a coordenação pedagógica da turma!')">
+                ✉️ Contatar Coordenação
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        Sistema de Notas Escolar &copy; 2026 - Backend Java Puro & PostgreSQL / Supabase
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/responsavel.js"></script>
+</body>
+</html>

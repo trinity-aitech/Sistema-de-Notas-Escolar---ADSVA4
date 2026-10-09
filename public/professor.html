@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Professor - Diário e Notas</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .nota-input {
+            width: 70px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .media-destaque {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">👨‍🏫</div>
+            <div class="logo-text">
+                <h1>Painel do Professor</h1>
+                <span>Gestão de Turmas, Lançamento de Notas e Chamada</span>
+            </div>
+        </div>
+        <div class="user-badge">
+            <span id="userName">Prof. Carlos Silva</span>
+            <button class="btn-logout" onclick="window.schoolApi.logout()">Sair</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Card de Seleção da Turma -->
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; gap: 1rem;">
+            <div>
+                <span class="stat-label">TURMA & DISCIPLINA ATUAL</span>
+                <h2 id="turmaInfo" style="font-size: 1.3rem;">9º Ano Fundamental - Turma 9A (Matemática)</h2>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span class="badge badge-success">Ano Letivo 2026</span>
+                <span class="badge badge-info">LDB: Mín. 75% Frequência</span>
+            </div>
+        </div>
+
+        <!-- Abas -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('notas')">📝 Lançamento de Notas</button>
+            <button class="tab-btn" onclick="switchTab('frequencia')">📅 Diário de Presença (Chamada)</button>
+        </div>
+
+        <!-- Aba de Lançamento de Notas -->
+        <div id="tab-notas" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <span>Grade Curricular de Notas</span>
+                    <button class="btn btn-primary" onclick="salvarTodasAsNotas()">💾 Salvar Alterações</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Nº</th>
+                                <th>Nome do Aluno</th>
+                                <th>Matrícula</th>
+                                <th style="text-align: center;">1º Bim</th>
+                                <th style="text-align: center;">2º Bim</th>
+                                <th style="text-align: center;">3º Bim</th>
+                                <th style="text-align: center;">4º Bim</th>
+                                <th style="text-align: center;">Média Atual</th>
+                                <th style="text-align: center;">Situação Preliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaNotasBody">
+                            <tr><td colspan="9" style="text-align: center;">Carregando alunos e avaliações...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba de Diário de Presença -->
+        <div id="tab-frequencia" class="tab-content" style="display: none;">
+            <div class="card">
+                <div class="card-title">
+                    <span>Registro do Diário de Classe</span>
+                    <div>
+                        <button class="btn btn-secondary" style="margin-right: 0.5rem;" onclick="marcarTodos(true)">Marcar Todos Presentes</button>
+                        <button class="btn btn-success" onclick="salvarChamada()">💾 Salvar Chamada</button>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-end;">
+                    <div style="max-width: 200px; width: 100%;">
+                        <label for="dataAulaInput">Data da Aula</label>
+                        <input type="date" id="dataAulaInput" value="2026-03-03">
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="conteudoAulaInput">Conteúdo Lecionado</label>
+                        <input type="text" id="conteudoAulaInput" value="Resolução de exercícios e revisão bimestral">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">Nº</th>
+                                <th>Nome do Aluno</th>
+                                <th>Matrícula</th>
+                                <th style="text-align: center; width: 150px;">Presença</th>
+                                <th>Justificativa (em caso de falta)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaPresencaBody">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Sistema de Notas Escolar &copy; 2026 - Backend Java Puro & PostgreSQL / Supabase
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/professor.js"></script>
+</body>
+</html>

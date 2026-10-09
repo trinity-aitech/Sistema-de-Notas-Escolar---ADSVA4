@@ -1,0 +1,25 @@
+# Java compiled files
+*.class
+*.jar
+*.war
+*.ear
+target/
+bin/
+
+# Lib (exclude temporary downloaded jars if needed, but let's keep postgres jar or lib if wanted)
+# Environment variables and secrets
+.env
+.env.local
+*.secret
+
+# IDE and Editors
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
