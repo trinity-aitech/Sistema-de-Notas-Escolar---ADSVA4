@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function carregarDadosFilho(alunoId) {
     try {
         const boletins = await window.schoolApi.getBoletim(alunoId);
-        const tbody = document.getElementById('tabelaBoletimResponsavel');
+        const tbody = document.getElementById('tabelaBoletimResponsavelBody') || document.querySelector('#tabelaBoletimResponsavel tbody');
         tbody.innerHTML = '';
 
         if (!boletins || boletins.length === 0) {
@@ -90,32 +90,58 @@ async function carregarDadosFilho(alunoId) {
             freqBar.className = 'progress-bar danger';
             alertaBox.className = 'alert alert-danger';
             alertaBox.innerHTML = `
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <i data-lucide="alert-octagon" style="color: #dc2626; flex-shrink: 0; width: 24px; height: 24px;"></i>
                 <div>
                     <strong>ALERTA CRÍTICO: Frequência Abaixo do Mínimo Legal (${freqGeral.toFixed(1)}%)</strong>
                     <p>O aluno atingiu nível de infrequência que acarreta <strong>reprovação por faltas segundo o Art. 24 da LDB</strong>. Favor contatar a direção imediatamente.</p>
                 </div>
             `;
             document.getElementById('badgeSituacaoFilho').className = 'badge badge-danger';
-            document.getElementById('badgeSituacaoFilho').textContent = 'Risco de Reprovação por Falta';
+            document.getElementById('badgeSituacaoFilho').innerHTML = '<i data-lucide="alert-triangle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Risco de Reprovação';
         } else if (freqGeral < 80.0) {
             freqBar.className = 'progress-bar warning';
             alertaBox.className = 'alert alert-warning';
             alertaBox.innerHTML = `
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <i data-lucide="alert-triangle" style="color: #d97706; flex-shrink: 0; width: 24px; height: 24px;"></i>
                 <div>
                     <strong>Aviso de Atenção: Frequência em Limite de Alerta (${freqGeral.toFixed(1)}%)</strong>
                     <p>A presença do estudante está próxima do corte de 75% estipulado pela LDB. Novas faltas não justificadas podem comprometer a aprovação.</p>
                 </div>
             `;
             document.getElementById('badgeSituacaoFilho').className = 'badge badge-warning';
-            document.getElementById('badgeSituacaoFilho').textContent = 'Atenção à Frequência';
+            document.getElementById('badgeSituacaoFilho').innerHTML = '<i data-lucide="alert-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Atenção à Frequência';
         } else {
             freqBar.className = 'progress-bar success';
             document.getElementById('badgeSituacaoFilho').className = 'badge badge-success';
-            document.getElementById('badgeSituacaoFilho').textContent = 'Situação Regular';
+            document.getElementById('badgeSituacaoFilho').innerHTML = '<i data-lucide="check-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Situação Regular';
+        }
+
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+
+        if (window.simpleDatatables && document.getElementById('tabelaBoletimResponsavel') && !window.respDataTable) {
+            window.respDataTable = new simpleDatatables.DataTable('#tabelaBoletimResponsavel', {
+                searchable: false,
+                paging: false,
+                sortable: true
+            });
         }
     } catch (e) {
         console.error('Erro ao carregar dados do responsável:', e);
     }
 }
+
+function contatarCoordenacao() {
+    if (window.Swal) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Atendimento à Família',
+            text: 'Sua solicitação de contato foi registrada e enviada para a coordenação pedagógica.',
+            confirmButtonColor: '#2563eb'
+        });
+    } else {
+        alert('Mensagem enviada para a coordenação pedagógica da turma!');
+    }
+}
+

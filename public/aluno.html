@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal do Aluno - Boletim Escolar & Frequência</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!-- Lucide Icons, SweetAlert2 e Simple-DataTables -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
 </head>
 <body>
     <header>
         <div class="logo-area">
+            <i data-lucide="graduation-cap" class="icon-lg" style="color: #60a5fa; margin-right: 0.75rem;"></i>
             <h1>Sistema de Notas Escolar</h1>
         </div>
         <div class="user-badge">
+            <i data-lucide="user" style="color: #93c5fd; width: 18px; height: 18px;"></i>
             <span id="userName">Lucas Mendes</span>
-            <button class="btn-logout" onclick="window.schoolApi.logout()">Sair</button>
+            <button class="btn-logout" onclick="window.schoolApi.logout()" style="display: inline-flex; align-items: center; gap: 4px;">
+                <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> Sair
+            </button>
         </div>
     </header>
 
@@ -22,24 +31,29 @@
         <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
                 <span class="stat-label">DADOS DO ESTUDANTE</span>
-                <h2 id="alunoNomeCompleto" style="font-size: 1.4rem;">Lucas Mendes</h2>
+                <h2 id="alunoNomeCompleto" style="font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                    <i data-lucide="user-check" style="color: var(--primary); width: 22px; height: 22px;"></i>
+                    Lucas Mendes
+                </h2>
                 <div style="margin-top: 0.25rem; color: var(--text-secondary); font-size: 0.9rem;">
                     Matrícula: <strong id="matriculaVal">2026001</strong> | Turma: <strong id="turmaVal">9A - Fundamental</strong> | Ano: <strong>2026</strong>
                 </div>
             </div>
             <div>
-                <span class="badge badge-success" id="badgeSituacaoGeral">Regular</span>
+                <span class="badge badge-success" id="badgeSituacaoGeral"><i data-lucide="check-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Regular</span>
             </div>
         </div>
 
         <!-- Indicadores Rápidos -->
         <div class="stats-grid">
             <div class="stat-box">
+                <i data-lucide="trending-up" class="stat-icon icon-lg"></i>
                 <span class="stat-label">MÉDIA GERAL</span>
                 <span class="stat-value" id="mediaGeralVal">8.75</span>
                 <span class="stat-desc">Mínimo para aprovação direta: 7.0</span>
             </div>
             <div class="stat-box">
+                <i data-lucide="shield-check" class="stat-icon icon-lg"></i>
                 <span class="stat-label">FREQUÊNCIA ESCOLAR</span>
                 <span class="stat-value" id="frequenciaVal">100%</span>
                 <div class="progress-container">
@@ -53,11 +67,13 @@
                 </span>
             </div>
             <div class="stat-box">
+                <i data-lucide="calendar" class="stat-icon icon-lg"></i>
                 <span class="stat-label">TOTAL DE AULAS</span>
                 <span class="stat-value" id="totalAulasVal">8</span>
                 <span class="stat-desc">Horas letivas ministradas</span>
             </div>
             <div class="stat-box">
+                <i data-lucide="user-x" class="stat-icon icon-lg"></i>
                 <span class="stat-label">FALTAS ACUMULADAS</span>
                 <span class="stat-value" id="totalFaltasVal">0</span>
                 <span class="stat-desc">Limite máximo de faltas: 25%</span>
@@ -66,7 +82,7 @@
 
         <!-- Alerta de Risco de Infrequência (LDB) se houver -->
         <div id="alertaLdbContainer" style="display: none;" class="alert alert-warning">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <i data-lucide="alert-triangle" style="flex-shrink: 0; color: #d97706; width: 26px; height: 26px;"></i>
             <div>
                 <strong>Atenção à Frequência Escolar (LDB 9.394/96 Art. 24)!</strong>
                 <p>O percentual de frequência está próximo ou abaixo do mínimo de 75% exigido pela legislação nacional para aprovação de ano.</p>
@@ -76,10 +92,13 @@
         <!-- Tabela do Boletim -->
         <div class="card">
             <div class="card-title">
-                <span>Boletim Acadêmico Detalhado</span>
+                <span style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                    <i data-lucide="file-text" style="color: var(--primary); width: 20px; height: 20px;"></i>
+                    Boletim Acadêmico Detalhado
+                </span>
             </div>
             <div class="table-responsive">
-                <table>
+                <table id="tabelaBoletim">
                     <thead>
                         <tr>
                             <th>Disciplina</th>
@@ -103,7 +122,10 @@
 
         <!-- Card Explicativo das Regras e Legislação -->
         <div class="card" style="background: rgba(248, 250, 252, 0.95); border-left: 4px solid var(--primary);">
-            <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--primary);">Entenda os Critérios de Avaliação e Normas Vigentes</h3>
+            <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--primary); display: flex; align-items: center; gap: 0.4rem;">
+                <i data-lucide="scale" style="width: 18px; height: 18px;"></i>
+                Entenda os Critérios de Avaliação e Normas Vigentes
+            </h3>
             <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; padding-left: 1.25rem;">
                 <li><strong>LDB 9.394/1996 (Art. 24, Inciso VI):</strong> Exigida a frequência mínima obrigatória de <strong>75%</strong> do total de horas letivas para aprovação de série/ano.</li>
                 <li><strong>Aprovação Direta:</strong> Média anual igual ou superior a <strong>7.0</strong> e frequência &ge; 75%.</li>

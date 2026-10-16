@@ -391,3 +391,64 @@ footer {
     color: rgba(255, 255, 255, 0.8);
     margin-top: auto;
 }
+
+/* Lucide Icons Helpers */
+.lucide {
+    width: 1.15em;
+    height: 1.15em;
+    vertical-align: -0.2em;
+    stroke-width: 2px;
+}
+.btn .lucide, .tab-btn .lucide {
+    margin-right: 0.4rem;
+}
+.icon-lg {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+.icon-xl {
+    width: 2.25rem;
+    height: 2.25rem;
+}
+.stat-icon {
+    float: right;
+    color: var(--primary);
+    opacity: 0.75;
+}
+
+/* SweetAlert2 font override */
+.swal2-popup {
+    font-family: inherit !important;
+    border-radius: var(--radius-lg) !important;
+}
+
+/* Simple-DataTables ajustes para tema da aplicação */
+.datatable-wrapper .datatable-top,
+.datatable-wrapper .datatable-bottom {
+    padding: 0.75rem 0.25rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.datatable-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    background: #ffffff;
+    outline: none;
+    box-shadow: var(--shadow-sm);
+}
+.datatable-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+.datatable-selector {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: #ffffff;
+}
+.datatable-pagination li a {
+    border-radius: var(--radius-sm);
+}
+

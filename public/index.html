@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Notas Escolar - Acesso</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!-- Lucide Icons & SweetAlert2 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .login-wrapper {
             display: flex;
@@ -37,9 +40,11 @@
             box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
         }
         .role-icon {
-            font-size: 1.75rem;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 0.5rem;
+            min-height: 32px;
         }
         .role-name {
             font-size: 0.85rem;
@@ -50,13 +55,17 @@
 <body>
     <header>
         <div class="logo-area">
+            <i data-lucide="graduation-cap" class="icon-lg" style="color: #60a5fa; margin-right: 0.75rem;"></i>
             <h1>Sistema de Notas Escolar</h1>
         </div>
     </header>
 
     <div class="container login-wrapper">
         <div class="card login-card">
-            <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Entrar no Portal</h2>
+            <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="lock" style="color: var(--primary); width: 22px; height: 22px;"></i>
+                Entrar no Portal
+            </h2>
             <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
                 Selecione o seu perfil para entrar rapidamente ou digite suas credenciais:
             </p>
@@ -64,19 +73,19 @@
             <div class="role-cards">
                 <button type="button" class="role-btn active" onclick="selectRole('PROFESSOR')">
                     <span class="role-icon">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <i data-lucide="user-check" class="icon-lg" style="color: var(--primary);"></i>
                     </span>
                     <span class="role-name">Professor</span>
                 </button>
                 <button type="button" class="role-btn" onclick="selectRole('ALUNO')">
                     <span class="role-icon">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        <i data-lucide="book-open" class="icon-lg" style="color: var(--success);"></i>
                     </span>
                     <span class="role-name">Aluno</span>
                 </button>
                 <button type="button" class="role-btn" onclick="selectRole('RESPONSAVEL')">
                     <span class="role-icon">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="17" cy="7" r="3"/></svg>
+                        <i data-lucide="users" class="icon-lg" style="color: var(--warning);"></i>
                     </span>
                     <span class="role-name">Pais / Resp.</span>
                 </button>
@@ -92,12 +101,13 @@
                     <input type="password" id="senhaInput" required value="123456">
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                    <i data-lucide="log-in"></i>
                     Acessar o Sistema
                 </button>
             </form>
 
-            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="info" style="color: var(--primary); flex-shrink: 0; width: 18px; height: 18px;"></i>
                 <span><strong>Demonstração rápida:</strong> Clique nos botões acima para preencher automaticamente as credenciais dos perfis definidos no diagrama arquitetural.</span>
             </div>
         </div>
@@ -116,6 +126,12 @@
         };
 
         let currentRole = 'PROFESSOR';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
 
         function selectRole(role) {
             currentRole = role;
@@ -149,3 +165,4 @@
     </script>
 </body>
 </html>
+

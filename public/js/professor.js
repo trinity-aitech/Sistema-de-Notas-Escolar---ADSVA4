@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('userName').textContent = user.nome;
     }
     await carregarDadosTurma();
+    if (window.lucide) window.lucide.createIcons();
 });
 
 function switchTab(tab) {
@@ -22,6 +23,7 @@ function switchTab(tab) {
         document.querySelector('.tabs button:nth-child(2)').classList.add('active');
         document.getElementById('tab-frequencia').style.display = 'block';
     }
+    if (window.lucide) window.lucide.createIcons();
 }
 
 async function carregarDadosTurma() {
@@ -105,6 +107,16 @@ function renderizarTabelaNotas() {
         `;
         tbody.appendChild(tr);
     });
+    if (window.lucide) window.lucide.createIcons();
+}
+
+function filtrarAlunos(termo) {
+    const q = (termo || '').toLowerCase().trim();
+    const linhas = document.querySelectorAll('#tabelaNotasBody tr');
+    linhas.forEach(linha => {
+        const texto = linha.textContent.toLowerCase();
+        linha.style.display = texto.includes(q) ? '' : 'none';
+    });
 }
 
 function recalcularLinha(matriculaId) {
@@ -149,7 +161,16 @@ async function salvarTodasAsNotas() {
             }
         }
     }
-    alert(`Sucesso! ${alteradas} notas foram atualizadas.`);
+    if (window.Swal) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Notas Salvas com Sucesso!',
+            text: `${alteradas} notas foram atualizadas e recalculadas de acordo com as regras escolares.`,
+            confirmButtonColor: '#2563eb'
+        });
+    } else {
+        alert(`Sucesso! ${alteradas} notas foram atualizadas.`);
+    }
 }
 
 function renderizarTabelaPresenca() {
@@ -180,6 +201,7 @@ function renderizarTabelaPresenca() {
             document.getElementById(`label_presenca_${m.id}`).style.color = cb.checked ? 'var(--success)' : 'var(--danger)';
         });
     });
+    if (window.lucide) window.lucide.createIcons();
 }
 
 function marcarTodos(presente) {
@@ -201,5 +223,14 @@ async function salvarChamada() {
             await window.schoolApi.salvarPresenca(aulaId, m.id, cb.checked, just);
         }
     }
-    alert('Chamada salva com sucesso!');
+    if (window.Swal) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Chamada Salva com Sucesso!',
+            text: 'A frequência da turma foi registrada e os índices da LDB foram atualizados.',
+            confirmButtonColor: '#16a34a'
+        });
+    } else {
+        alert('Chamada salva com sucesso!');
+    }
 }

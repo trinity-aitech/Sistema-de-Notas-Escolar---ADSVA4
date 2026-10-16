@@ -101,8 +101,26 @@ const api = {
     },
 
     logout() {
-        localStorage.removeItem('usuario_logado');
-        window.location.href = '/index.html';
+        if (window.Swal) {
+            Swal.fire({
+                title: 'Encerrar Sessão?',
+                text: 'Deseja realmente sair do portal escolar?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Sim, sair',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('usuario_logado');
+                    window.location.href = '/index.html';
+                }
+            });
+        } else {
+            localStorage.removeItem('usuario_logado');
+            window.location.href = '/index.html';
+        }
     }
 };
 
