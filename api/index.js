@@ -1,4 +1,4 @@
-﻿// Vercel Serverless Function - Adaptador Oficial para Sistema Escolar
+// Vercel Serverless Function - Adaptador Oficial para Sistema Escolar
 // Conexão nativa com PostgreSQL (Supabase / Neon / Vercel Postgres) via biblioteca 'pg'
 // Alinhado 100% com o Diagrama de Classes UML: Usuario, Professor, Responsavel, Aluno, Historico, Curso, Disciplina, Notas, Presencas
 
@@ -43,9 +43,27 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const { url } = req;
-  const parsedUrl = new URL(url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = parsedUrl.pathname;
+  const rawUrl = req.url || '';
+  const parsedUrl = new URL(rawUrl, `http://${req.headers.host || 'localhost'}`);
+  let pathname = parsedUrl.pathname;
+
+  // Suporte a rewrites da Vercel (?route=...) ou cabeçalhos de roteamento
+  const routeParam = parsedUrl.searchParams.get('route');
+  if (routeParam) {
+    pathname = '/api/' + routeParam.replace(/^\//, '');
+  } else if (req.headers['x-matched-path']) {
+    pathname = req.headers['x-matched-path'];
+  } else if (req.headers['x-now-route-matches']) {
+    try {
+      const match = new URLSearchParams(req.headers['x-now-route-matches']).get('1');
+      if (match) pathname = '/api/' + match;
+    } catch (_) {}
+  }
+
+  // Assegura prefixo /api/
+  if (!pathname.startsWith('/api') && pathname.startsWith('/')) {
+    pathname = '/api' + pathname;
+  }
 
   // 1. Proxy opcional se houver JAVA_BACKEND_URL configurada
   const javaBackendUrl = process.env.JAVA_BACKEND_URL;
@@ -67,6 +85,27 @@ export default async function handler(req, res) {
   const db = getPool();
 
   try {
+    // Rota de status / diagnóstico
+    if (pathname === '/api' || pathname === '/api/' || pathname === '/api/index.js') {
+      let dbStatus = "desconectado";
+      let totalUsuarios = 0;
+      if (db) {
+        try {
+          const testQuery = await db.query('SELECT count(*) FROM usuarios');
+          totalUsuarios = parseInt(testQuery.rows[0].count, 10);
+          dbStatus = "conectado";
+        } catch (dbErr) {
+          dbStatus = `erro: ${dbErr.message}`;
+        }
+      }
+      return res.status(200).json({
+        status: "online",
+        database: dbStatus,
+        totalUsuarios,
+        mensagem: "API Serverless do Sistema de Notas Escolar ativa"
+      });
+    }
+
     // -------------------------------------------------------------
     // ROTA: /api/auth/login
     // -------------------------------------------------------------

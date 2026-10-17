@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const user = window.schoolApi.getCurrentUser();
-    let alunoId = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb01"; // Lucas Mendes
+    let alunoId = "4"; // Lucas Mendes (ID 4 no esquema UML)
 
     if (user && user.perfil === 'ALUNO') {
         if (user.nome) {

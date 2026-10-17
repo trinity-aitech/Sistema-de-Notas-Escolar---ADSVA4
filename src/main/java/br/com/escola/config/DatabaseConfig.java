@@ -39,7 +39,13 @@ public class DatabaseConfig {
         // Ex: postgres://postgres:senha@db.ref.supabase.co:5432/postgres
         String databaseUrl = System.getenv("DATABASE_URL");
         if (databaseUrl == null || databaseUrl.isBlank()) {
+            databaseUrl = System.getProperty("DATABASE_URL");
+        }
+        if (databaseUrl == null || databaseUrl.isBlank()) {
             databaseUrl = System.getenv("SUPABASE_DB_URL");
+        }
+        if (databaseUrl == null || databaseUrl.isBlank()) {
+            databaseUrl = System.getProperty("SUPABASE_DB_URL");
         }
 
         if (databaseUrl != null && !databaseUrl.isBlank() && databaseUrl.startsWith("postgres")) {
