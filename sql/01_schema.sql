@@ -1,4 +1,4 @@
-﻿-- ==========================================================
+-- ==========================================================
 -- SISTEMA DE NOTAS ESCOLAR - ESQUEMA DE BANCO DE DADOS
 -- MODELAGEM CONFORME DIAGRAMA DE CLASSES UML DO PROJETO
 -- ==========================================================

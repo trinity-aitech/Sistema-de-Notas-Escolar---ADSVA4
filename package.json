@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Sistema de Notas Escolar em Java Puro com PostgreSQL, Supabase e Vercel",
   "main": "api/index.js",
+  "type": "module",
   "scripts": {
     "build": "echo 'Projeto pronto para deploy na Vercel'",
     "start": "java -cp \"bin;lib/postgresql-42.7.3.jar\" br.com.escola.Main"
