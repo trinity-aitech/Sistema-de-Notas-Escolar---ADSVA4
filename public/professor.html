@@ -3,190 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Professor - Diário e Notas</title>
-    <link rel="stylesheet" href="css/styles.css?v=2">
-    <!-- Lucide Icons, SweetAlert2 e Simple-DataTables -->
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
+    <title>Painel do Professor - Notas e Chamada</title>
+    <link rel="stylesheet" href="css/styles.css?v=3">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
-    <style>
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 1.5rem;
-        }
-        .tab-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.75rem 1.5rem;
-            background: none;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-        }
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-        .nota-input {
-            width: 70px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .media-destaque {
-            font-weight: 700;
-            font-size: 1.05rem;
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <div class="logo-area">
-            <i data-lucide="graduation-cap" class="icon-lg" style="color: #60a5fa; margin-right: 0.75rem;"></i>
-            <h1>Sistema de Notas Escolar</h1>
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="icon-btn" id="menuToggle" title="Menu principal"><i data-lucide="menu"></i></button>
+            <a class="brand" href="/professor.html">
+                <span class="brand-mark"><i data-lucide="graduation-cap"></i></span>
+                <span class="brand-name">Notas Escolar</span>
+            </a>
         </div>
-        <div class="user-badge">
-            <i data-lucide="user-check" style="color: #93c5fd; width: 18px; height: 18px;"></i>
-            <span id="userName">Prof. Carlos Silva</span>
-            <button class="btn-logout" onclick="window.schoolApi.logout()" style="display: inline-flex; align-items: center; gap: 4px;">
-                <i data-lucide="log-out" style="width: 14px; height: 14px;"></i>
-                Sair
-            </button>
+        <label class="topbar-search">
+            <i data-lucide="search"></i>
+            <input type="search" id="globalSearch" placeholder="Pesquisar aluno ou matrícula">
+        </label>
+        <div class="topbar-right">
+            <div class="user-chip">
+                <span class="avatar" data-avatar>CS</span>
+                <span class="user-name" id="userName">Prof. Carlos Silva</span>
+            </div>
+            <button class="icon-btn" title="Sair" onclick="window.schoolApi.logout()"><i data-lucide="log-out"></i></button>
         </div>
     </header>
 
-    <div class="container">
-        <!-- Card de Seleção da Turma -->
-        <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <span class="stat-label">TURMA & DISCIPLINA ATUAL</span>
-                <h2 id="turmaInfo" style="font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                    <i data-lucide="book-marked" style="color: var(--primary); width: 22px; height: 22px;"></i>
-                    9º Ano Fundamental - Turma 9A (Matemática)
-                </h2>
-            </div>
-            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                <span class="badge badge-success"><i data-lucide="calendar" style="width: 14px; height: 14px; margin-right: 4px;"></i> Ano Letivo 2026</span>
-                <span class="badge badge-info"><i data-lucide="shield-check" style="width: 14px; height: 14px; margin-right: 4px;"></i> LDB: Mín. 75% Frequência</span>
-            </div>
-        </div>
-
-        <!-- Abas -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('notas')">
-                <i data-lucide="award"></i>
-                Lançamento de Notas
+    <div class="shell">
+        <aside class="sidebar" id="sidebar">
+            <button class="compose-btn" onclick="salvarSecaoAtual()">
+                <i data-lucide="save"></i>
+                <span id="composeLabel">Salvar notas</span>
             </button>
-            <button class="tab-btn" onclick="switchTab('frequencia')">
-                <i data-lucide="calendar-check"></i>
-                Diário de Presença (Chamada)
-            </button>
-        </div>
 
-        <!-- Aba de Lançamento de Notas -->
-        <div id="tab-notas" class="tab-content">
-            <div class="card">
-                <div class="card-title" style="flex-wrap: wrap; gap: 0.75rem;">
-                    <span style="display: inline-flex; align-items: center; gap: 0.4rem;">
-                        <i data-lucide="file-spreadsheet" style="color: var(--primary); width: 20px; height: 20px;"></i>
-                        Grade Curricular de Notas
-                    </span>
-                    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                        <div style="position: relative;">
-                            <input type="text" id="filtroAlunosNotas" placeholder="Buscar aluno..." oninput="filtrarAlunos(this.value)" style="padding: 0.45rem 0.75rem 0.45rem 2rem; font-size: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); outline: none; background: #fff;">
-                            <i data-lucide="search" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-muted);"></i>
-                        </div>
-                        <button class="btn btn-primary" onclick="salvarTodasAsNotas()">
-                            <i data-lucide="save"></i>
-                            Salvar Alterações
-                        </button>
+            <nav class="nav">
+                <a class="nav-item" data-section="notas" href="#notas">
+                    <i data-lucide="award"></i>
+                    <span class="nav-label">Notas</span>
+                    <span class="nav-count" id="countNotas"></span>
+                </a>
+                <a class="nav-item" data-section="chamada" href="#chamada">
+                    <i data-lucide="calendar-check"></i>
+                    <span class="nav-label">Chamada</span>
+                    <span class="nav-count" id="countChamada"></span>
+                </a>
+            </nav>
+
+            <div class="nav-heading">Turmas</div>
+            <nav class="nav">
+                <div class="nav-item static">
+                    <span class="nav-dot"></span>
+                    <span class="nav-label" id="sidebarTurma">9A · Matemática</span>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <!-- Seção: Notas -->
+            <section id="section-notas" class="section">
+                <div class="main-toolbar">
+                    <div class="toolbar-left">
+                        <h2 class="section-title">Notas</h2>
+                        <span class="section-sub" id="turmaInfo">9º Ano Fundamental - Turma 9A (Matemática)</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <span class="toolbar-meta" id="metaNotas"></span>
+                        <button class="icon-btn" title="Recarregar" onclick="carregarDadosTurma()"><i data-lucide="rotate-cw"></i></button>
+                        <button class="btn btn-primary" onclick="salvarTodasAsNotas()"><i data-lucide="save"></i>Salvar</button>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 50px;">Nº</th>
-                                <th>Nome do Aluno</th>
+                                <th style="width: 56px;">Nº</th>
+                                <th>Aluno</th>
                                 <th>Matrícula</th>
                                 <th style="text-align: center;">1º Bim</th>
                                 <th style="text-align: center;">2º Bim</th>
                                 <th style="text-align: center;">3º Bim</th>
                                 <th style="text-align: center;">4º Bim</th>
-                                <th style="text-align: center;">Média Atual</th>
-                                <th style="text-align: center;">Situação Preliminar</th>
+                                <th style="text-align: center;">Média</th>
+                                <th style="text-align: center;">Situação</th>
                             </tr>
                         </thead>
                         <tbody id="tabelaNotasBody">
-                            <tr><td colspan="9" style="text-align: center;">Carregando alunos e avaliações...</td></tr>
+                            <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Carregando alunos e avaliações...</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Aba de Diário de Presença -->
-        <div id="tab-frequencia" class="tab-content" style="display: none;">
-            <div class="card">
-                <div class="card-title" style="flex-wrap: wrap; gap: 0.75rem;">
-                    <span style="display: inline-flex; align-items: center; gap: 0.4rem;">
-                        <i data-lucide="clipboard-check" style="color: var(--success); width: 20px; height: 20px;"></i>
-                        Registro do Diário de Classe
-                    </span>
-                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                        <button class="btn btn-secondary" onclick="marcarTodos(true)">
-                            <i data-lucide="check-check"></i>
-                            Marcar Todos Presentes
-                        </button>
-                        <button class="btn btn-success" onclick="salvarChamada()">
-                            <i data-lucide="save"></i>
-                            Salvar Chamada
-                        </button>
+            <!-- Seção: Chamada -->
+            <section id="section-chamada" class="section">
+                <div class="main-toolbar">
+                    <div class="toolbar-left">
+                        <h2 class="section-title">Chamada</h2>
+                        <span class="section-sub" data-turma-label>9º Ano Fundamental - Turma 9A (Matemática)</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <span class="toolbar-meta" id="metaChamada"></span>
+                        <button class="btn btn-secondary" onclick="marcarTodos(true)"><i data-lucide="check-check"></i>Todos presentes</button>
+                        <button class="btn btn-success" onclick="salvarChamada()"><i data-lucide="save"></i>Salvar</button>
                     </div>
                 </div>
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-end;">
-                    <div style="max-width: 200px; width: 100%;">
-                        <label for="dataAulaInput">Data da Aula</label>
+                <div class="form-row">
+                    <div style="width: 180px;">
+                        <label for="dataAulaInput">Data da aula</label>
                         <input type="date" id="dataAulaInput" value="2026-03-03">
                     </div>
-                    <div style="flex: 1;">
-                        <label for="conteudoAulaInput">Conteúdo Lecionado</label>
+                    <div style="flex: 1; min-width: 220px;">
+                        <label for="conteudoAulaInput">Conteúdo lecionado</label>
                         <input type="text" id="conteudoAulaInput" value="Resolução de exercícios e revisão bimestral">
                     </div>
                 </div>
-
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 60px;">Nº</th>
-                                <th>Nome do Aluno</th>
+                                <th style="width: 56px;">Nº</th>
+                                <th>Aluno</th>
                                 <th>Matrícula</th>
                                 <th style="text-align: center; width: 150px;">Presença</th>
-                                <th>Justificativa (em caso de falta)</th>
+                                <th>Justificativa</th>
                             </tr>
                         </thead>
-                        <tbody id="tabelaPresencaBody">
-                            <!-- Preenchido via JS -->
-                        </tbody>
+                        <tbody id="tabelaPresencaBody"></tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
-
-    <footer>
-        Sistema de Notas Escolar &copy; 2026 - Em conformidade com o Art. 24 da LDB 9.394/96 e normas CEE
-    </footer>
+    <div class="scrim" id="scrim"></div>
 
     <script src="js/api.js"></script>
-    <script src="js/professor.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/professor.js?v=3"></script>
 </body>
 </html>

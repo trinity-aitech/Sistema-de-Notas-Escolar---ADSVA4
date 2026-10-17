@@ -84,16 +84,28 @@ async function carregarBoletim(alunoId) {
 
         document.getElementById('mediaGeralVal').textContent = mediaGeral.toFixed(2);
         document.getElementById('frequenciaVal').textContent = `${freqGeral.toFixed(1)}%`;
+        const freqDetalhe = document.getElementById('frequenciaValDetalhe');
+        if (freqDetalhe) freqDetalhe.textContent = `${freqGeral.toFixed(1)}%`;
         document.getElementById('totalAulasVal').textContent = totalAulasSoma;
         document.getElementById('totalFaltasVal').textContent = totalFaltasSoma;
+
+        const countDisc = document.getElementById('countDisciplinas');
+        if (countDisc) countDisc.textContent = count;
+        const countFaltas = document.getElementById('countFaltas');
+        if (countFaltas) countFaltas.textContent = totalFaltasSoma > 0 ? totalFaltasSoma : '';
 
         const freqBar = document.getElementById('frequenciaBar');
         freqBar.style.width = `${Math.min(100, freqGeral)}%`;
 
+        const badgeGeral = document.getElementById('badgeSituacaoGeral');
         if (freqGeral < 75.0) {
             freqBar.className = 'progress-bar danger';
+            badgeGeral.className = 'badge badge-danger';
+            badgeGeral.innerHTML = '<i data-lucide="alert-triangle"></i> Risco por faltas';
         } else if (freqGeral < 80.0) {
             freqBar.className = 'progress-bar warning';
+            badgeGeral.className = 'badge badge-warning';
+            badgeGeral.innerHTML = '<i data-lucide="alert-circle"></i> Atenção à frequência';
         } else {
             freqBar.className = 'progress-bar success';
         }

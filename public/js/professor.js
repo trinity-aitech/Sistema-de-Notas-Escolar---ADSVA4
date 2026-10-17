@@ -12,18 +12,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.lucide) window.lucide.createIcons();
 });
 
-function switchTab(tab) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+// Botão principal da sidebar muda conforme a seção ativa
+document.addEventListener('sectionchange', (e) => {
+    const label = document.getElementById('composeLabel');
+    if (label) label.textContent = e.detail === 'chamada' ? 'Salvar chamada' : 'Salvar notas';
+});
 
-    if (tab === 'notas') {
-        document.querySelector('.tabs button:nth-child(1)').classList.add('active');
-        document.getElementById('tab-notas').style.display = 'block';
+function switchTab(tab) {
+    window.layout.showSection(tab === 'frequencia' ? 'chamada' : tab);
+}
+
+function salvarSecaoAtual() {
+    if (document.body.dataset.section === 'chamada') {
+        salvarChamada();
     } else {
-        document.querySelector('.tabs button:nth-child(2)').classList.add('active');
-        document.getElementById('tab-frequencia').style.display = 'block';
+        salvarTodasAsNotas();
     }
-    if (window.lucide) window.lucide.createIcons();
 }
 
 async function carregarDadosTurma() {
@@ -31,7 +35,11 @@ async function carregarDadosTurma() {
         const turmas = await window.schoolApi.getTurmas();
         if (turmas && turmas.length > 0) {
             turmaAtual = turmas[0];
-            document.getElementById('turmaInfo').textContent = `${turmaAtual.serie} - Turma ${turmaAtual.codigo} (${turmaAtual.disciplinaNome})`;
+            const descricao = `${turmaAtual.serie} - Turma ${turmaAtual.codigo} (${turmaAtual.disciplinaNome})`;
+            document.getElementById('turmaInfo').textContent = descricao;
+            document.querySelectorAll('[data-turma-label]').forEach(el => { el.textContent = descricao; });
+            const sidebarTurma = document.getElementById('sidebarTurma');
+            if (sidebarTurma) sidebarTurma.textContent = `${turmaAtual.codigo} · ${turmaAtual.disciplinaNome}`;
 
             const tdId = turmaAtual.turmaDisciplinaId;
             const [alunos, avaliacoes, notas] = await Promise.all([
@@ -47,6 +55,12 @@ async function carregarDadosTurma() {
             notas.forEach(n => {
                 notasMap[`${n.matriculaId}_${n.periodo}`] = n.valorNota;
             });
+
+            const total = alunosTurma.length;
+            document.getElementById('countNotas').textContent = total || '';
+            document.getElementById('countChamada').textContent = total || '';
+            document.getElementById('metaNotas').textContent = total ? `1–${total} de ${total}` : '';
+            document.getElementById('metaChamada').textContent = total ? `${total} alunos` : '';
 
             renderizarTabelaNotas();
             renderizarTabelaPresenca();

@@ -39,6 +39,10 @@ async function carregarDadosFilho(alunoId) {
             document.getElementById('filhoNome').textContent = b.alunoNome;
             document.getElementById('filhoMatricula').textContent = b.matricula;
             document.getElementById('filhoTurma').textContent = `${b.turmaCodigo} - Ensino Fundamental`;
+            const sidebarFilho = document.getElementById('sidebarFilho');
+            if (sidebarFilho) sidebarFilho.textContent = b.alunoNome;
+            const filhoAvatar = document.getElementById('filhoAvatar');
+            if (filhoAvatar && window.layout) filhoAvatar.textContent = window.layout.initials(b.alunoNome);
 
             const n1 = b.notasPeriodos[0] !== null && b.notasPeriodos[0] !== undefined ? b.notasPeriodos[0].toFixed(1) : '-';
             const n2 = b.notasPeriodos[1] !== null && b.notasPeriodos[1] !== undefined ? b.notasPeriodos[1].toFixed(1) : '-';
@@ -79,41 +83,52 @@ async function carregarDadosFilho(alunoId) {
 
         document.getElementById('mediaFilho').textContent = mediaGeral.toFixed(2);
         document.getElementById('frequenciaFilho').textContent = `${freqGeral.toFixed(1)}%`;
+        const freqResumo = document.getElementById('frequenciaFilhoResumo');
+        if (freqResumo) freqResumo.textContent = `${freqGeral.toFixed(1)}%`;
         document.getElementById('faltasFilho').textContent = totalFaltas;
         document.getElementById('aulasFilho').textContent = totalAulas;
+
+        const countDisc = document.getElementById('countDisciplinas');
+        if (countDisc) countDisc.textContent = count;
+        const countFaltas = document.getElementById('countFaltas');
+        if (countFaltas) countFaltas.textContent = totalFaltas > 0 ? totalFaltas : '';
 
         const freqBar = document.getElementById('frequenciaBarFilho');
         freqBar.style.width = `${Math.min(100, freqGeral)}%`;
 
         const alertaBox = document.getElementById('alertaFrequenciaBox');
+        const badge = document.getElementById('badgeSituacaoFilho');
         if (freqGeral < 75.0) {
             freqBar.className = 'progress-bar danger';
             alertaBox.className = 'alert alert-danger';
+            alertaBox.style.display = 'flex';
             alertaBox.innerHTML = `
-                <i data-lucide="alert-octagon" style="color: #dc2626; flex-shrink: 0; width: 24px; height: 24px;"></i>
+                <i data-lucide="alert-octagon" style="flex-shrink: 0; width: 22px; height: 22px;"></i>
                 <div>
-                    <strong>ALERTA CRÍTICO: Frequência Abaixo do Mínimo Legal (${freqGeral.toFixed(1)}%)</strong>
-                    <p>O aluno atingiu nível de infrequência que acarreta <strong>reprovação por faltas segundo o Art. 24 da LDB</strong>. Favor contatar a direção imediatamente.</p>
+                    <strong>Frequência abaixo do mínimo (${freqGeral.toFixed(1)}%)</strong>
+                    <p>O nível de faltas pode levar à reprovação. Recomendamos contatar a coordenação.</p>
                 </div>
             `;
-            document.getElementById('badgeSituacaoFilho').className = 'badge badge-danger';
-            document.getElementById('badgeSituacaoFilho').innerHTML = '<i data-lucide="alert-triangle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Risco de Reprovação';
+            badge.className = 'badge badge-danger';
+            badge.innerHTML = '<i data-lucide="alert-triangle"></i> Risco de reprovação';
         } else if (freqGeral < 80.0) {
             freqBar.className = 'progress-bar warning';
             alertaBox.className = 'alert alert-warning';
+            alertaBox.style.display = 'flex';
             alertaBox.innerHTML = `
-                <i data-lucide="alert-triangle" style="color: #d97706; flex-shrink: 0; width: 24px; height: 24px;"></i>
+                <i data-lucide="alert-triangle" style="flex-shrink: 0; width: 22px; height: 22px;"></i>
                 <div>
-                    <strong>Aviso de Atenção: Frequência em Limite de Alerta (${freqGeral.toFixed(1)}%)</strong>
-                    <p>A presença do estudante está próxima do corte de 75% estipulado pela LDB. Novas faltas não justificadas podem comprometer a aprovação.</p>
+                    <strong>Frequência em alerta (${freqGeral.toFixed(1)}%)</strong>
+                    <p>A presença está próxima do mínimo exigido. Novas faltas não justificadas podem comprometer a aprovação.</p>
                 </div>
             `;
-            document.getElementById('badgeSituacaoFilho').className = 'badge badge-warning';
-            document.getElementById('badgeSituacaoFilho').innerHTML = '<i data-lucide="alert-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Atenção à Frequência';
+            badge.className = 'badge badge-warning';
+            badge.innerHTML = '<i data-lucide="alert-circle"></i> Atenção à frequência';
         } else {
             freqBar.className = 'progress-bar success';
-            document.getElementById('badgeSituacaoFilho').className = 'badge badge-success';
-            document.getElementById('badgeSituacaoFilho').innerHTML = '<i data-lucide="check-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Situação Regular';
+            alertaBox.style.display = 'none';
+            badge.className = 'badge badge-success';
+            badge.innerHTML = '<i data-lucide="check-circle"></i> Situação regular';
         }
 
         if (window.lucide) {

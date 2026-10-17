@@ -4,118 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Notas Escolar - Acesso</title>
-    <link rel="stylesheet" href="css/styles.css?v=2">
+    <link rel="stylesheet" href="css/styles.css?v=3">
     <!-- Lucide Icons & SweetAlert2 -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        .login-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 80vh;
-        }
-        .login-card {
-            max-width: 480px;
-            width: 100%;
-        }
-        .role-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin: 1.5rem 0;
-        }
-        .role-btn {
-            background: rgba(255, 255, 255, 0.85);
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            border-radius: var(--radius-md);
-            padding: 1rem 0.5rem;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        .role-btn:hover, .role-btn.active {
-            border-color: var(--primary);
-            background: #ffffff;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
-        }
-        .role-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.5rem;
-            min-height: 32px;
-        }
-        .role-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-    </style>
 </head>
-<body>
-    <header>
-        <div class="logo-area">
-            <i data-lucide="graduation-cap" class="icon-lg" style="color: #60a5fa; margin-right: 0.75rem;"></i>
-            <h1>Sistema de Notas Escolar</h1>
+<body class="login-page">
+    <header class="topbar">
+        <div class="topbar-left">
+            <a class="brand" href="/index.html">
+                <span class="brand-mark"><i data-lucide="graduation-cap"></i></span>
+                <span class="brand-name">Notas Escolar</span>
+            </a>
+        </div>
+        <div class="topbar-right" style="margin-left: auto;">
+            <a href="https://github.com/trinity-aitech/Sistema-de-Notas-Escolar---ADSVA4" target="_blank" class="icon-btn" title="Repositório GitHub">
+                <i data-lucide="github"></i>
+            </a>
         </div>
     </header>
 
-    <div class="container login-wrapper">
-        <div class="card login-card">
-            <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i data-lucide="lock" style="color: var(--primary); width: 22px; height: 22px;"></i>
-                Entrar no Portal
-            </h2>
-            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
-                Selecione o seu perfil para entrar rapidamente ou digite suas credenciais:
-            </p>
+    <div class="shell">
+        <div class="login-card">
+            <h2>Fazer login</h2>
+            <p class="lead">Acesse o portal acadêmico com seu perfil institucional</p>
 
             <div class="role-cards">
-                <button type="button" class="role-btn active" onclick="selectRole('PROFESSOR')">
-                    <span class="role-icon">
-                        <i data-lucide="user-check" class="icon-lg" style="color: var(--primary);"></i>
-                    </span>
+                <button type="button" class="role-btn active" onclick="selectRole('PROFESSOR', event)">
+                    <i data-lucide="award"></i>
                     <span class="role-name">Professor</span>
                 </button>
-                <button type="button" class="role-btn" onclick="selectRole('ALUNO')">
-                    <span class="role-icon">
-                        <i data-lucide="book-open" class="icon-lg" style="color: var(--success);"></i>
-                    </span>
+                <button type="button" class="role-btn" onclick="selectRole('ALUNO', event)">
+                    <i data-lucide="book-open"></i>
                     <span class="role-name">Aluno</span>
                 </button>
-                <button type="button" class="role-btn" onclick="selectRole('RESPONSAVEL')">
-                    <span class="role-icon">
-                        <i data-lucide="users" class="icon-lg" style="color: var(--warning);"></i>
-                    </span>
-                    <span class="role-name">Pais / Resp.</span>
+                <button type="button" class="role-btn" onclick="selectRole('RESPONSAVEL', event)">
+                    <i data-lucide="users"></i>
+                    <span class="role-name">Responsável</span>
                 </button>
             </div>
 
             <form id="loginForm" onsubmit="handleLoginSubmit(event)">
                 <div class="form-group">
-                    <label for="emailInput">E-mail Institucional</label>
-                    <input type="email" id="emailInput" required value="carlos.silva@escola.com">
+                    <label for="emailInput">E-mail institucional</label>
+                    <input type="email" id="emailInput" required value="carlos.silva@escola.com" placeholder="nome@escola.com">
                 </div>
                 <div class="form-group">
                     <label for="senhaInput">Senha</label>
-                    <input type="password" id="senhaInput" required value="123456">
+                    <input type="password" id="senhaInput" required value="123456" placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
-                    <i data-lucide="log-in"></i>
-                    Acessar o Sistema
-                </button>
+                <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0 1.5rem; height: 40px;">
+                        <i data-lucide="log-in"></i>
+                        Acessar o portal
+                    </button>
+                </div>
             </form>
 
-            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
-                <i data-lucide="info" style="color: var(--primary); flex-shrink: 0; width: 18px; height: 18px;"></i>
-                <span><strong>Demonstração rápida:</strong> Clique nos botões acima para preencher automaticamente as credenciais dos perfis definidos no diagrama arquitetural.</span>
+            <div class="login-hint">
+                <i data-lucide="info" style="width: 16px; height: 16px; flex-shrink: 0; color: var(--primary);"></i>
+                <span>Clique em um dos perfis acima para alternar automaticamente as credenciais predefinidas.</span>
             </div>
         </div>
     </div>
-
-    <footer>
-        Sistema de Notas Escolar &copy; 2026 - Em conformidade com o Art. 24 da LDB 9.394/96 e normas CEE
-    </footer>
 
     <script src="js/api.js"></script>
     <script>
@@ -133,10 +84,12 @@
             }
         });
 
-        function selectRole(role) {
+        function selectRole(role, evt) {
             currentRole = role;
             document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if (evt && evt.currentTarget) {
+                evt.currentTarget.classList.add('active');
+            }
             document.getElementById('emailInput').value = credentials[role].email;
         }
 
@@ -157,7 +110,6 @@
                     window.location.href = '/responsavel.html';
                 }
             } catch (err) {
-                // Fallback de navegação direta para demonstração se a API estiver em modo offline
                 const target = credentials[currentRole]?.url || '/professor.html';
                 window.location.href = target;
             }
@@ -165,4 +117,3 @@
     </script>
 </body>
 </html>
-

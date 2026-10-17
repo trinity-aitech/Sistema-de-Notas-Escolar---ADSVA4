@@ -3,143 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal dos Pais & Responsáveis - Acompanhamento Escolar</title>
-    <link rel="stylesheet" href="css/styles.css?v=2">
-    <!-- Lucide Icons, SweetAlert2 e Simple-DataTables -->
+    <title>Portal dos Responsáveis - Acompanhamento Escolar</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=3">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
 </head>
 <body>
-    <header>
-        <div class="logo-area">
-            <i data-lucide="graduation-cap" class="icon-lg" style="color: #60a5fa; margin-right: 0.75rem;"></i>
-            <h1>Sistema de Notas Escolar</h1>
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="icon-btn" id="menuToggle" title="Menu principal"><i data-lucide="menu"></i></button>
+            <a class="brand" href="/responsavel.html">
+                <span class="brand-mark"><i data-lucide="graduation-cap"></i></span>
+                <span class="brand-name">Notas Escolar</span>
+            </a>
         </div>
-        <div class="user-badge">
-            <i data-lucide="users" style="color: #93c5fd; width: 18px; height: 18px;"></i>
-            <span id="userName">Maria Mendes (Responsável)</span>
-            <button class="btn-logout" onclick="window.schoolApi.logout()" style="display: inline-flex; align-items: center; gap: 4px;">
-                <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> Sair
-            </button>
+        <label class="topbar-search">
+            <i data-lucide="search"></i>
+            <input type="search" id="globalSearch" placeholder="Pesquisar disciplina">
+        </label>
+        <div class="topbar-right">
+            <div class="user-chip">
+                <span class="avatar" data-avatar>MM</span>
+                <span class="user-name" id="userName">Maria Mendes (Responsável)</span>
+            </div>
+            <button class="icon-btn" title="Sair" onclick="window.schoolApi.logout()"><i data-lucide="log-out"></i></button>
         </div>
     </header>
 
-    <div class="container">
-        <!-- Card de Apresentação e Seleção de Filho -->
-        <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <span class="stat-label">ALUNO DEPENDENTE VINCULADO</span>
-                <h2 id="filhoNome" style="font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                    <i data-lucide="user-check" style="color: var(--primary); width: 22px; height: 22px;"></i>
-                    Lucas Mendes
-                </h2>
-                <div style="margin-top: 0.25rem; color: var(--text-secondary); font-size: 0.9rem;">
-                    Matrícula: <strong id="filhoMatricula">2026001</strong> | Turma: <strong id="filhoTurma">9º Ano A (Fundamental)</strong>
-                </div>
-            </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge badge-success" id="badgeSituacaoFilho"><i data-lucide="check-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> Situação Regular</span>
-            </div>
-        </div>
-
-        <!-- Banner de Alerta de Frequência Escolar Preventivo -->
-        <div id="alertaFrequenciaBox" class="alert alert-info" style="display: flex; align-items: flex-start; gap: 0.85rem;">
-            <i data-lucide="info" style="color: var(--primary); flex-shrink: 0; width: 24px; height: 24px;"></i>
-            <div>
-                <strong>Acompanhamento em Tempo Real da Frequência (Art. 24 da LDB 9.394/96)</strong>
-                <p>O acompanhamento contínuo dos pais é essencial. A legislação brasileira exige <strong>no mínimo 75% de presença</strong> em todas as disciplinas para aprovação de ano.</p>
-            </div>
-        </div>
-
-        <!-- Métricas Rápidas do Dependente -->
-        <div class="stats-grid">
-            <div class="stat-box">
-                <i data-lucide="trending-up" class="stat-icon icon-lg"></i>
-                <span class="stat-label">MÉDIA DE DESEMPENHO</span>
-                <span class="stat-value" id="mediaFilho">8.75</span>
-                <span class="stat-desc" style="color: var(--success);">Excelente rendimento</span>
-            </div>
-            <div class="stat-box">
-                <i data-lucide="shield-check" class="stat-icon icon-lg"></i>
-                <span class="stat-label">FREQUÊNCIA REGISTRADA</span>
-                <span class="stat-value" id="frequenciaFilho">100%</span>
-                <div class="progress-container">
-                    <div class="ldb-marker" title="Limite mínimo legal da LDB (75%)"></div>
-                    <div class="progress-bar success" id="frequenciaBarFilho" style="width: 100%;"></div>
-                </div>
-                <span class="stat-desc" style="display: flex; justify-content: space-between;">
-                    <span>0%</span>
-                    <span style="font-weight: 700; color: var(--danger);">| 75% LDB</span>
-                    <span>100%</span>
-                </span>
-            </div>
-            <div class="stat-box">
-                <i data-lucide="user-x" class="stat-icon icon-lg"></i>
-                <span class="stat-label">FALTAS REGISTRADAS</span>
-                <span class="stat-value" id="faltasFilho">0</span>
-                <span class="stat-desc">Faltas acumuladas no período</span>
-            </div>
-            <div class="stat-box">
-                <i data-lucide="clock" class="stat-icon icon-lg"></i>
-                <span class="stat-label">TOTAL DE HORAS/AULAS</span>
-                <span class="stat-value" id="aulasFilho">8</span>
-                <span class="stat-desc">Carga horária ministrada</span>
-            </div>
-        </div>
-
-        <!-- Boletim Acadêmico das Disciplinas -->
-        <div class="card">
-            <div class="card-title">
-                <span style="display: inline-flex; align-items: center; gap: 0.4rem;">
-                    <i data-lucide="book-open" style="color: var(--primary); width: 20px; height: 20px;"></i>
-                    Rendimento por Disciplina
-                </span>
-            </div>
-            <div class="table-responsive">
-                <table id="tabelaBoletimResponsavel">
-                    <thead>
-                        <tr>
-                            <th>Disciplina</th>
-                            <th style="text-align: center;">1º Bim</th>
-                            <th style="text-align: center;">2º Bim</th>
-                            <th style="text-align: center;">3º Bim</th>
-                            <th style="text-align: center;">4º Bim</th>
-                            <th style="text-align: center;">Média Anual</th>
-                            <th style="text-align: center;">Exame Final</th>
-                            <th style="text-align: center;">Média Final</th>
-                            <th style="text-align: center;">Presença (%)</th>
-                            <th style="text-align: center;">Resultado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaBoletimResponsavelBody">
-                        <tr><td colspan="10" style="text-align: center;">Carregando notas...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Canal de Contato com a Escola -->
-        <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Dúvidas ou Justificativas de Falta?</h3>
-                <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                    Envie atestados médicos ou agende um atendimento com a coordenação pedagógica.
-                </p>
-            </div>
-            <button class="btn btn-primary" onclick="contatarCoordenacao()">
-                <i data-lucide="mail"></i>
-                Contatar Coordenação
+    <div class="shell">
+        <aside class="sidebar" id="sidebar">
+            <button class="compose-btn" onclick="window.layout.showSection('contato')">
+                <i data-lucide="pencil"></i>
+                <span>Contatar escola</span>
             </button>
-        </div>
-    </div>
 
-    <footer>
-        Sistema de Notas Escolar &copy; 2026 - Em conformidade com o Art. 24 da LDB 9.394/96 e normas CEE
-    </footer>
+            <nav class="nav">
+                <a class="nav-item" data-section="boletim" href="#boletim">
+                    <i data-lucide="file-text"></i>
+                    <span class="nav-label">Boletim</span>
+                    <span class="nav-count" id="countDisciplinas"></span>
+                </a>
+                <a class="nav-item" data-section="frequencia" href="#frequencia">
+                    <i data-lucide="calendar-check"></i>
+                    <span class="nav-label">Frequência</span>
+                    <span class="nav-count" id="countFaltas"></span>
+                </a>
+                <a class="nav-item" data-section="contato" href="#contato">
+                    <i data-lucide="mail"></i>
+                    <span class="nav-label">Contato</span>
+                </a>
+            </nav>
+
+            <div class="nav-heading">Dependentes</div>
+            <nav class="nav">
+                <div class="nav-item static">
+                    <span class="nav-dot"></span>
+                    <span class="nav-label" id="sidebarFilho">Lucas Mendes</span>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <!-- Seção: Boletim -->
+            <section id="section-boletim" class="section">
+                <div class="main-toolbar">
+                    <div class="toolbar-left">
+                        <h2 class="section-title">Boletim</h2>
+                        <span class="section-sub">Ano letivo 2026</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <span class="badge badge-success" id="badgeSituacaoFilho"><i data-lucide="check-circle"></i> Situação regular</span>
+                    </div>
+                </div>
+
+                <div class="profile-strip">
+                    <span class="avatar" id="filhoAvatar">LM</span>
+                    <div>
+                        <div class="profile-name" id="filhoNome">Lucas Mendes</div>
+                        <div class="profile-meta">Matrícula <strong id="filhoMatricula">2026001</strong> · Turma <strong id="filhoTurma">9A</strong></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Média de desempenho</span>
+                        <span class="stat-value" id="mediaFilho">-</span>
+                        <span class="stat-desc">Aprovação direta a partir de 7.0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Frequência</span>
+                        <span class="stat-value" id="frequenciaFilhoResumo">-</span>
+                        <span class="stat-desc">Detalhes na seção Frequência</span>
+                    </div>
+                </div>
+
+                <div class="group-header"><i data-lucide="chevron-down"></i> Rendimento por disciplina</div>
+                <div class="table-responsive">
+                    <table id="tabelaBoletimResponsavel">
+                        <thead>
+                            <tr>
+                                <th>Disciplina</th>
+                                <th style="text-align: center;">1º Bim</th>
+                                <th style="text-align: center;">2º Bim</th>
+                                <th style="text-align: center;">3º Bim</th>
+                                <th style="text-align: center;">4º Bim</th>
+                                <th style="text-align: center;">Média</th>
+                                <th style="text-align: center;">Exame</th>
+                                <th style="text-align: center;">Final</th>
+                                <th style="text-align: center;">Presença</th>
+                                <th style="text-align: center;">Resultado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaBoletimResponsavelBody">
+                            <tr><td colspan="10" style="text-align: center; color: var(--text-muted);">Carregando notas...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Seção: Frequência -->
+            <section id="section-frequencia" class="section">
+                <div class="main-toolbar">
+                    <div class="toolbar-left">
+                        <h2 class="section-title">Frequência</h2>
+                        <span class="section-sub">Presenças e faltas do dependente</span>
+                    </div>
+                </div>
+
+                <!-- Exibido apenas quando há risco de frequência -->
+                <div id="alertaFrequenciaBox" class="alert alert-warning" style="display: none;"></div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <i data-lucide="shield-check" class="stat-icon"></i>
+                        <span class="stat-label">Frequência registrada</span>
+                        <span class="stat-value" id="frequenciaFilho">-</span>
+                        <div class="progress-container">
+                            <div class="ldb-marker" title="Mínimo obrigatório (75%)"></div>
+                            <div class="progress-bar success" id="frequenciaBarFilho" style="width: 0%;"></div>
+                        </div>
+                        <span class="stat-desc">A marca indica o mínimo de 75%</span>
+                    </div>
+                    <div class="stat-box">
+                        <i data-lucide="user-x" class="stat-icon"></i>
+                        <span class="stat-label">Faltas</span>
+                        <span class="stat-value" id="faltasFilho">-</span>
+                        <span class="stat-desc">Acumuladas no período</span>
+                    </div>
+                    <div class="stat-box">
+                        <i data-lucide="clock" class="stat-icon"></i>
+                        <span class="stat-label">Total de aulas</span>
+                        <span class="stat-value" id="aulasFilho">-</span>
+                        <span class="stat-desc">Carga horária ministrada</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção: Contato -->
+            <section id="section-contato" class="section">
+                <div class="main-toolbar">
+                    <div class="toolbar-left">
+                        <h2 class="section-title">Contato com a escola</h2>
+                    </div>
+                </div>
+                <div class="empty-state">
+                    <i data-lucide="mail"></i>
+                    <h3>Dúvidas ou justificativas de falta?</h3>
+                    <p>Envie atestados médicos ou agende um atendimento com a coordenação pedagógica.</p>
+                    <button class="btn btn-primary" onclick="contatarCoordenacao()">
+                        <i data-lucide="send"></i>
+                        Contatar coordenação
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div class="scrim" id="scrim"></div>
 
     <script src="js/api.js"></script>
-    <script src="js/responsavel.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/responsavel.js?v=3"></script>
 </body>
 </html>
