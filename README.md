@@ -61,6 +61,188 @@ O projeto adota uma arquitetura em duas vias compatível tanto com infraestrutur
 
 ---
 
+## 📐 Padrões de Projeto Aplicados (GoF)
+
+O sistema implementa 3 padrões GoF clássicos para desacoplar a criação de objetos, centralizar os fluxos de negócio e reagir a eventos pedagógicos em tempo real:
+
+### 1. Factory Method (Padrão Criacional)
+- **Problema resolvido:** Antes da aplicação do padrão, a instanciação e dedução do perfil de usuário no login eram feitas através de cadeias de condicionais `if/else` no controlador HTTP (`HttpServerApp`). Isso violava o princípio Aberto/Fechado (OCP), pois a introdução de novos perfis (como `Responsavel`) exigia alterar diretamente o fluxo de transporte HTTP.
+- **Solução no código:**
+  - `br.com.escola.modulos.usuarios.Usuario`: Interface comum para produtos (`Product`).
+  - `br.com.escola.modulos.alunos.Aluno`, `br.com.escola.modulos.alunos.Professor` e `br.com.escola.modulos.usuarios.Responsavel`: Implementações concretas (`ConcreteProduct`).
+  - `br.com.escola.modulos.usuarios.UsuarioFactory`: Classe abstrata criadora (`Creator`) contendo o método fábrica `criarUsuario(Map<String, String> dados)` e método estático seletor.
+  - `AlunoFactory`, `ProfessorFactory` e `ResponsavelFactory`: Fábricas concretas (`ConcreteCreator`).
+
+### 2. Facade (Padrão Estrutural)
+- **Problema resolvido:** O servidor web (`HttpServerApp`) possuía dependência direta e dispersa em múltiplos DAOs (`AlunoDAO`, `TurmaDAO`, `NotaDAO`, `PresencaDAO`) e múltiplos serviços de regras (`BoletimService`, `MotorRegrasService`). Qualquer alteração na camada de persistência ou de negócio forçava alterações na camada HTTP.
+- **Solução no código:**
+  - `br.com.escola.modulos.secretaria.SecretariaFacade`: Fachada unificada (`Facade`) que instancia e coordena os DAOs e Services, provendo métodos expressivos de negócio (`login`, `listarTurmas`, `lancarNota`, `registrarPresenca`, `gerarBoletim`, etc.).
+  - `HttpServerApp`: Passa a interagir exclusivamente com a fachada, desacoplando os handlers HTTP das regras internas.
+
+### 3. Observer (Padrão Comportamental)
+- **Problema resolvido:** Quando um professor lançava uma nota ou registrava presença, a ação se limitava a gravar no banco de dados. Ações acessórias essenciais (como notificar pais, recalcular histórico escolar e emitir alerta de infrequência) ficavam esquecidas ou demandariam acoplamento direto no DAO/controlador.
+- **Solução no código:**
+  - `br.com.escola.modulos.eventos.EventoEscolar`: Interface selada de eventos (`Event`), com os records `NotaLancada` e `PresencaRegistrada`.
+  - `br.com.escola.modulos.eventos.Observador`: Interface de observador (`Observer`).
+  - `br.com.escola.modulos.eventos.PublicadorEventos`: Sujeito publicador (`Subject`) com suporte a Virtual Threads e isolamento de exceções.
+  - Observers concretos (`ConcreteObserver`):
+    - `ObservadorResponsavel`: Gera avisos e notificações direcionadas aos responsáveis do aluno.
+    - `ObservadorHistorico`: Recalcula médias e situação acadêmica via `MotorRegrasService`.
+    - `ObservadorInfrequencia`: Monitora faltas e emite alertas preventivos imediatos caso a frequência acumulada fique abaixo de 80%.
+
+---
+
+### Diagrama de Classes dos Padrões (Mermaid)
+
+```mermaid
+classDiagram
+    %% Factory Method
+    class Usuario {
+        <<interface>>
+        +UUID id()
+        +String nome()
+        +String email()
+        +String perfil()
+    }
+    class Aluno {
+        +UUID id()
+        +String nome()
+        +String email()
+        +String perfil()
+    }
+    class Professor {
+        +UUID id()
+        +String nome()
+        +String email()
+        +String perfil()
+    }
+    class Responsavel {
+        +UUID id()
+        +String nome()
+        +String email()
+        +String perfil()
+    }
+    class UsuarioFactory {
+        <<abstract>>
+        +criarUsuario(Map dados)* Usuario
+        +obterFabrica(String perfil)$ UsuarioFactory
+    }
+    class AlunoFactory {
+        +criarUsuario(Map dados) Usuario
+    }
+    class ProfessorFactory {
+        +criarUsuario(Map dados) Usuario
+    }
+    class ResponsavelFactory {
+        +criarUsuario(Map dados) Usuario
+    }
+
+    Usuario <|.. Aluno : implements
+    Usuario <|.. Professor : implements
+    Usuario <|.. Responsavel : implements
+    UsuarioFactory <|-- AlunoFactory : extends
+    UsuarioFactory <|-- ProfessorFactory : extends
+    UsuarioFactory <|-- ResponsavelFactory : extends
+    UsuarioFactory ..> Usuario : cria
+
+    %% Facade
+    class SecretariaFacade {
+        -AlunoDAO alunoDAO
+        -TurmaDAO turmaDAO
+        -NotaDAO notaDAO
+        -PresencaDAO presencaDAO
+        -BoletimService boletimService
+        -MotorRegrasService motorRegras
+        -PublicadorEventos publicador
+        +login(Map credenciais) Map
+        +lancarNota(UUID avaliacaoId, UUID matriculaId, double valor, String obs) boolean
+        +registrarPresenca(UUID aulaId, UUID matriculaId, boolean pres, String just) boolean
+        +gerarBoletim(UUID alunoId) List
+    }
+    class HttpServerApp {
+        -SecretariaFacade facade
+    }
+    HttpServerApp --> SecretariaFacade : utiliza
+
+    %% Observer
+    class EventoEscolar {
+        <<sealed interface>>
+    }
+    class NotaLancada {
+        +UUID matriculaId
+        +UUID avaliacaoId
+        +double valor
+    }
+    class PresencaRegistrada {
+        +UUID matriculaId
+        +UUID aulaId
+        +boolean presente
+    }
+    EventoEscolar <|.. NotaLancada
+    EventoEscolar <|.. PresencaRegistrada
+
+    class Observador {
+        <<interface>>
+        +atualizar(EventoEscolar evento) void
+    }
+    class PublicadorEventos {
+        -List~Observador~ observadores
+        +adicionarObservador(Observador o) void
+        +removerObservador(Observador o) void
+        +notificar(EventoEscolar e) void
+    }
+    class ObservadorResponsavel {
+        +atualizar(EventoEscolar e) void
+    }
+    class ObservadorHistorico {
+        +atualizar(EventoEscolar e) void
+    }
+    class ObservadorInfrequencia {
+        +atualizar(EventoEscolar e) void
+    }
+
+    Observador <|.. ObservadorResponsavel : implements
+    Observador <|.. ObservadorHistorico : implements
+    Observador <|.. ObservadorInfrequencia : implements
+    PublicadorEventos o--> Observador : notifica
+    SecretariaFacade --> PublicadorEventos : dispara eventos
+```
+
+---
+
+### Diagrama de Sequência UC01 - Lançar Nota (Mermaid)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Prof as Professor (Web UI)
+    participant Http as HttpServerApp
+    participant Facade as SecretariaFacade
+    participant DAO as NotaDAO
+    participant Pub as PublicadorEventos
+    participant ObsResp as ObservadorResponsavel
+    participant ObsHist as ObservadorHistorico
+
+    Prof->>Http: POST /api/notas (avaliacaoId, matriculaId, valorNota)
+    Http->>Facade: lancarNota(avaliacaoId, matriculaId, valor, obs)
+    Facade->>DAO: salvarNota(avaliacaoId, matriculaId, valor, obs)
+    DAO-->>Facade: true (sucesso)
+    
+    rect rgb(30, 45, 60)
+        note over Facade,ObsHist: Disparo assíncrono e thread-safe de eventos do padrão Observer
+        Facade->>Pub: notificar(new NotaLancada(matriculaId, avaliacaoId, valor))
+        Pub->>ObsResp: atualizar(evento)
+        ObsResp-->>Pub: log e aviso ao responsável gerado
+        Pub->>ObsHist: atualizar(evento)
+        ObsHist-->>Pub: situação acadêmica recalculada
+    end
+
+    Facade-->>Http: true
+    Http-->>Prof: 200 OK {"sucesso": true, "mensagem": "Nota lançada com sucesso"}
+```
+
+---
+
 ## 🚀 Como Executar Localmente
 
 ### 1. Pré-requisitos
