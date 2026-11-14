@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="800" fill="#0f172a"/>
+
+  <!-- Título e Subtítulo -->
+  <text x="50" y="45" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700">Diagrama C4 de Containers - Sistema de Notas Escolar</text>
+  <text x="50" y="70" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="14">Visão de alto nível dos containers lógicos, fronteiras de execução e protocolos de comunicação</text>
+
+  <!-- Atores (Topo) -->
+  <g transform="translate(100, 100)" filter="url(#shadow)">
+    <rect width="280" height="100" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+    <text x="140" y="32" fill="#38bdf8" font-family="sans-serif" font-size="15" font-weight="700" text-anchor="middle">Atores e Usuários</text>
+    <text x="140" y="55" fill="#e2e8f0" font-family="sans-serif" font-size="12" text-anchor="middle">Alunos, Professores, Secretários</text>
+    <text x="140" y="75" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Acesso desktop e mobile</text>
+  </g>
+
+  <!-- Seta Atores -> Web Frontend -->
+  <line x1="380" y1="150" x2="480" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="430" y="140" fill="#cbd5e1" font-family="sans-serif" font-size="11" text-anchor="middle">HTTPS</text>
+
+  <!-- Container 1: Frontend SPA -->
+  <g transform="translate(490, 100)" filter="url(#shadow)">
+    <rect width="320" height="100" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+    <text x="160" y="30" fill="#60a5fa" font-family="sans-serif" font-size="15" font-weight="700" text-anchor="middle">Single-Page Application (SPA)</text>
+    <text x="160" y="52" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">[Container: HTML5, CSS Glassmorphism, JS]</text>
+    <text x="160" y="72" fill="#cbd5e1" font-family="sans-serif" font-size="12" text-anchor="middle">Interface reativa, painéis por papel,</text>
+    <text x="160" y="88" fill="#cbd5e1" font-family="sans-serif" font-size="12" text-anchor="middle">validações de formulários no cliente</text>
+  </g>
+
+  <!-- Seta Frontend -> Backend API -->
+  <line x1="650" y1="200" x2="650" y2="280" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="730" y="245" fill="#cbd5e1" font-family="sans-serif" font-size="11" text-anchor="middle">JSON REST / HTTPS</text>
+
+  <!-- Limite do Sistema Backend (Fronteira) -->
+  <rect x="180" y="270" width="840" height="280" rx="12" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="6 6"/>
+  <text x="200" y="295" fill="#94a3b8" font-family="sans-serif" font-size="12" font-weight="700">SISTEMA BACKEND (JVM RUNTIME)</text>
+
+  <!-- Container 2: Backend API Monolith -->
+  <g transform="translate(210, 310)" filter="url(#shadow)">
+    <rect width="780" height="220" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+    <text x="390" y="32" fill="#c084fc" font-family="sans-serif" font-size="17" font-weight="700" text-anchor="middle">API &amp; Application Server (Monólito Modular)</text>
+    <text x="390" y="52" fill="#94a3b8" font-family="sans-serif" font-size="12" text-anchor="middle">[Container: Java 17+ Puro, Embedded HttpServer, JDBC Driver]</text>
+
+    <!-- Sub-blocos internos -->
+    <rect x="25" y="70" width="220" height="125" rx="6" fill="#0f172a" stroke="#334155"/>
+    <text x="135" y="95" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">Controladores REST</text>
+    <text x="135" y="115" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">AuthController</text>
+    <text x="135" y="133" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Turmas / Alunos API</text>
+    <text x="135" y="151" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Notas e Faltas Endpoints</text>
+    <text x="135" y="169" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Dashboard / Relatórios</text>
+
+    <rect x="275" y="70" width="220" height="125" rx="6" fill="#0f172a" stroke="#334155"/>
+    <text x="385" y="95" fill="#a855f7" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">Regras de Negócio &amp; Domínio</text>
+    <text x="385" y="115" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Motor LDB 9.394/96</text>
+    <text x="385" y="133" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Regra 75% Assiduidade</text>
+    <text x="385" y="151" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Cálculo de Médias e Exame</text>
+    <text x="385" y="169" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Autenticação com JWT</text>
+
+    <rect x="525" y="70" width="225" height="125" rx="6" fill="#0f172a" stroke="#334155"/>
+    <text x="637" y="95" fill="#10b981" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">Acesso a Dados (DAO)</text>
+    <text x="637" y="115" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">HikariCP Pool de Conexões</text>
+    <text x="637" y="133" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">PreparedStatements SQL</text>
+    <text x="637" y="151" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Transações ACID / Commit</text>
+    <text x="637" y="169" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Mapeamento Objeto-Relacional</text>
+  </g>
+
+  <!-- Seta Backend -> Banco de Dados -->
+  <line x1="600" y1="530" x2="600" y2="610" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="690" y="575" fill="#6ee7b7" font-family="sans-serif" font-size="11" text-anchor="middle">JDBC / TLS (Porta 5432)</text>
+
+  <!-- Container 3: Banco de Dados -->
+  <g transform="translate(420, 620)" filter="url(#shadow)">
+    <rect width="360" height="110" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+    <text x="180" y="32" fill="#34d399" font-family="sans-serif" font-size="15" font-weight="700" text-anchor="middle">Banco de Dados PostgreSQL 16</text>
+    <text x="180" y="52" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">[Container: PostgreSQL / Supabase Cloud]</text>
+    <text x="180" y="73" fill="#e2e8f0" font-family="sans-serif" font-size="12" text-anchor="middle">Persistência relacional em 3FN: alunos, turmas,</text>
+    <text x="180" y="91" fill="#cbd5e1" font-family="sans-serif" font-size="12" text-anchor="middle">matrículas, notas bimestrais e trilha de auditoria</text>
+  </g>
+
+  <!-- Container 4: Armazenamento Local / Logs -->
+  <g transform="translate(100, 620)" filter="url(#shadow)">
+    <rect width="250" height="110" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+    <text x="125" y="32" fill="#fbbf24" font-family="sans-serif" font-size="14" font-weight="700" text-anchor="middle">Sistema de Arquivos &amp; Logs</text>
+    <text x="125" y="52" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">[Volume Local: logs/audit.log]</text>
+    <text x="125" y="73" fill="#e2e8f0" font-family="sans-serif" font-size="12" text-anchor="middle">Registro append-only de</text>
+    <text x="125" y="91" fill="#cbd5e1" font-family="sans-serif" font-size="12" text-anchor="middle">eventos e falhas do servidor</text>
+  </g>
+
+  <line x1="330" y1="530" x2="225" y2="620" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Container 5: Serviço de Autenticação / Segurança -->
+  <g transform="translate(850, 620)" filter="url(#shadow)">
+    <rect width="260" height="110" rx="8" fill="#1e293b" stroke="#ec4899" stroke-width="2"/>
+    <text x="130" y="32" fill="#f472b6" font-family="sans-serif" font-size="14" font-weight="700" text-anchor="middle">Segurança &amp; Criptografia</text>
+    <text x="130" y="52" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">[Módulo Interno de Criptografia]</text>
+    <text x="130" y="73" fill="#e2e8f0" font-family="sans-serif" font-size="12" text-anchor="middle">Hash de senhas com Salt</text>
+    <text x="130" y="91" fill="#cbd5e1" font-family="sans-serif" font-size="12" text-anchor="middle">Tokens de sessão com expiração</text>
+  </g>
+
+  <line x1="870" y1="530" x2="980" y2="620" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Rodapé -->
+  <text x="50" y="775" fill="#64748b" font-family="sans-serif" font-size="12">Diagrama em conformidade com o modelo C4 (Nível 2 - Containers)</text>
+</svg>
