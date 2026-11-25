@@ -14,6 +14,9 @@ import br.com.escola.modulos.presenca.PresencaDAO;
 import br.com.escola.modulos.regras.BoletimDTO;
 import br.com.escola.modulos.regras.BoletimService;
 import br.com.escola.modulos.regras.MotorRegrasService;
+import br.com.escola.modulos.usuarios.Responsavel;
+import br.com.escola.modulos.usuarios.Usuario;
+import br.com.escola.modulos.usuarios.UsuarioFactory;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -87,26 +90,22 @@ public class HttpServerApp {
             Map<String, String> data = JsonUtils.parseSimpleJson(body);
             String email = data.getOrDefault("email", "carlos.silva@escola.com");
 
-            // Mapeamento simples de usuário por email para o login demonstrativo
+            // Aplicacao do padrao Factory Method para instanciacao do usuario conforme perfil/email
+            UsuarioFactory fabrica = UsuarioFactory.obterFabricaPorEmail(email);
+            Usuario usuario = fabrica.criarUsuario(data);
+
             Map<String, Object> resp = new LinkedHashMap<>();
-            if (email.contains("carlos") || email.contains("prof")) {
-                resp.put("id", "22222222-2222-2222-2222-222222222222");
-                resp.put("nome", "Prof. Carlos Silva");
-                resp.put("email", email);
-                resp.put("perfil", "PROFESSOR");
-            } else if (email.contains("maria") || email.contains("responsavel")) {
-                resp.put("id", "33333333-3333-3333-3333-333333333333");
-                resp.put("nome", "Maria Mendes");
-                resp.put("email", email);
-                resp.put("perfil", "RESPONSAVEL");
-                resp.put("alunoVinculadoId", "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb01");
-            } else {
-                resp.put("id", "44444444-4444-4444-4444-444444444444");
-                resp.put("nome", "Lucas Mendes");
-                resp.put("email", email);
-                resp.put("perfil", "ALUNO");
+            resp.put("id", usuario.id().toString());
+            resp.put("nome", usuario.nome());
+            resp.put("email", usuario.email());
+            resp.put("perfil", usuario.perfil());
+
+            if (usuario instanceof Responsavel responsavel && responsavel.alunoVinculadoId() != null) {
+                resp.put("alunoVinculadoId", responsavel.alunoVinculadoId().toString());
+            } else if (usuario instanceof Aluno) {
                 resp.put("alunoId", "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb01");
             }
+
             responderJson(exchange, 200, resp);
         } else {
             responderJson(exchange, 405, Map.of("erro", "Método não permitido"));
