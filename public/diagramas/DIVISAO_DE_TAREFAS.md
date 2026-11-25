@@ -89,11 +89,11 @@ Comentar cada classe com o papel no padrão. Sem emojis nem travessões. Rodar m
 **Entrega:** `SecretariaFacade` e `HttpServerApp` enxuto.
 
 **Tarefas:**
-- [ ] Criar `SecretariaFacade` no pacote `modulos.secretaria`.
-- [ ] Implementar os métodos: `login`, `listarTurmas`, `listarAlunosDaTurma`, `listarAvaliacoes`, `listarNotas`, `lancarNota`, `listarAulas`, `listarPresencas`, `registrarPresenca`, `gerarBoletim`, `obterRegras`.
-- [ ] A fachada instancia e esconde `AlunoDAO`, `TurmaDAO`, `NotaDAO`, `PresencaDAO`, `BoletimService` e `MotorRegrasService`.
-- [ ] Refatorar o `HttpServerApp`: ele passa a ter só a `SecretariaFacade` como dependência. Os handlers apenas leem a requisição, chamam a fachada e respondem JSON.
-- [ ] Deixar um ponto claro em `lancarNota` e `registrarPresenca` para chamar `notificar()` depois de salvar (o Integrante 3 entrega o publicador).
+- [x] Criar `SecretariaFacade` no pacote `modulos.secretaria`.
+- [x] Implementar os métodos: `login`, `listarTurmas`, `listarAlunosDaTurma`, `listarAvaliacoes`, `listarNotas`, `lancarNota`, `listarAulas`, `listarPresencas`, `registrarPresenca`, `gerarBoletim`, `obterRegras`.
+- [x] A fachada instancia e esconde `AlunoDAO`, `TurmaDAO`, `NotaDAO`, `PresencaDAO`, `BoletimService` e `MotorRegrasService`.
+- [x] Refatorar o `HttpServerApp`: ele passa a ter só a `SecretariaFacade` como dependência. Os handlers apenas leem a requisição, chamam a fachada e respondem JSON.
+- [x] Deixar um ponto claro em `lancarNota` e `registrarPresenca` para chamar `notificar()` depois de salvar (o Integrante 3 entrega o publicador).
 
 **Depende de:** Integrante 1 (para o login) e Integrante 3 (para o `notificar`). Pode começar já com o resto e plugar os dois depois.
 **Cuidado:** combinar com o Integrante 1 para não gerar conflito no `HttpServerApp`.
