@@ -1,20 +1,13 @@
 package br.com.escola.http;
 
-import br.com.escola.modulos.alunos.Aluno;
-import br.com.escola.modulos.alunos.AlunoDAO;
 import br.com.escola.modulos.alunos.Matricula;
 import br.com.escola.modulos.alunos.Turma;
-import br.com.escola.modulos.alunos.TurmaDAO;
 import br.com.escola.modulos.notas.Avaliacao;
 import br.com.escola.modulos.notas.Nota;
-import br.com.escola.modulos.notas.NotaDAO;
 import br.com.escola.modulos.presenca.Aula;
 import br.com.escola.modulos.presenca.Presenca;
-import br.com.escola.modulos.presenca.PresencaDAO;
 import br.com.escola.modulos.regras.BoletimDTO;
-import br.com.escola.modulos.regras.BoletimService;
-import br.com.escola.modulos.regras.MotorRegrasService;
-import br.com.escola.modulos.usuarios.UsuarioFactory;
+import br.com.escola.modulos.secretaria.SecretariaFacade;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -29,6 +22,8 @@ import java.util.logging.Logger;
 
 /**
  * Servidor HTTP embutido da JDK com suporte nativo a Virtual Threads e JSON REST API.
+ * Papel no padrao GoF Facade: Client. Depende apenas da SecretariaFacade; os handlers
+ * so leem a requisicao, chamam a fachada e respondem JSON.
  */
 public class HttpServerApp {
 
@@ -37,15 +32,15 @@ public class HttpServerApp {
     private final int port;
     private HttpServer server;
 
-    private final AlunoDAO alunoDAO = new AlunoDAO();
-    private final TurmaDAO turmaDAO = new TurmaDAO();
-    private final NotaDAO notaDAO = new NotaDAO();
-    private final PresencaDAO presencaDAO = new PresencaDAO();
-    private final BoletimService boletimService = new BoletimService();
-    private final MotorRegrasService motorRegrasService = new MotorRegrasService();
+    private final SecretariaFacade secretaria;
 
     public HttpServerApp(int port) {
+        this(port, new SecretariaFacade());
+    }
+
+    public HttpServerApp(int port, SecretariaFacade secretaria) {
         this.port = port;
+        this.secretaria = secretaria;
     }
 
     public void start() throws IOException {
@@ -88,14 +83,8 @@ public class HttpServerApp {
             Map<String, String> data = JsonUtils.parseSimpleJson(body);
             String email = data.getOrDefault("email", "carlos.silva@escola.com");
 
-            // Factory Method: o perfil escolhe a fabrica, e a fabrica cria o usuario certo.
-            // Apenas o e-mail digitado e repassado; os demais dados vem da fabrica.
-            Map<String, String> dados = new HashMap<>();
-            dados.put("email", email);
             try {
-                String perfil = UsuarioFactory.identificarPerfil(email);
-                UsuarioFactory fabrica = UsuarioFactory.obterFabrica(perfil);
-                responderJson(exchange, 200, fabrica.montarRespostaLogin(dados));
+                responderJson(exchange, 200, secretaria.login(email));
             } catch (IllegalArgumentException e) {
                 responderJson(exchange, 400, Map.of("erro", e.getMessage()));
             }
@@ -106,7 +95,7 @@ public class HttpServerApp {
 
     private void handleTurmas(HttpExchange exchange) throws IOException {
         if (aplicarCorsEOpcoes(exchange)) return;
-        List<Turma> turmas = turmaDAO.listarTodas();
+        List<Turma> turmas = secretaria.listarTurmas();
         responderJson(exchange, 200, turmas);
     }
 
@@ -116,7 +105,7 @@ public class HttpServerApp {
         String turmaIdStr = params.getOrDefault("turmaId", "dddddddd-dddd-dddd-dddd-dddddddddddd");
         UUID turmaId = UUID.fromString(turmaIdStr);
 
-        List<Matricula> matriculas = alunoDAO.listarMatriculasPorTurma(turmaId);
+        List<Matricula> matriculas = secretaria.listarAlunosDaTurma(turmaId);
         responderJson(exchange, 200, matriculas);
     }
 
@@ -126,7 +115,7 @@ public class HttpServerApp {
         String tdIdStr = params.getOrDefault("turmaDisciplinaId", "ffffffff-ffff-ffff-ffff-ffffffffffff");
         UUID tdId = UUID.fromString(tdIdStr);
 
-        List<Avaliacao> avaliacoes = notaDAO.listarAvaliacoes(tdId);
+        List<Avaliacao> avaliacoes = secretaria.listarAvaliacoes(tdId);
         responderJson(exchange, 200, avaliacoes);
     }
 
@@ -138,7 +127,7 @@ public class HttpServerApp {
             String tdIdStr = params.getOrDefault("turmaDisciplinaId", "ffffffff-ffff-ffff-ffff-ffffffffffff");
             UUID tdId = UUID.fromString(tdIdStr);
 
-            List<Nota> notas = notaDAO.listarNotasPorTurmaDisciplina(tdId);
+            List<Nota> notas = secretaria.listarNotas(tdId);
             responderJson(exchange, 200, notas);
         } else if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
             String body = lerCorpo(exchange);
@@ -149,7 +138,7 @@ public class HttpServerApp {
             double valor = Double.parseDouble(data.get("valorNota"));
             String obs = data.getOrDefault("observacao", "");
 
-            boolean ok = notaDAO.salvarNota(avaliacaoId, matriculaId, valor, obs);
+            boolean ok = secretaria.lancarNota(avaliacaoId, matriculaId, valor, obs);
             responderJson(exchange, 200, Map.of("sucesso", ok, "mensagem", "Nota lançada com sucesso"));
         }
     }
@@ -160,7 +149,7 @@ public class HttpServerApp {
         String tdIdStr = params.getOrDefault("turmaDisciplinaId", "ffffffff-ffff-ffff-ffff-ffffffffffff");
         UUID tdId = UUID.fromString(tdIdStr);
 
-        List<Aula> aulas = presencaDAO.listarAulas(tdId);
+        List<Aula> aulas = secretaria.listarAulas(tdId);
         responderJson(exchange, 200, aulas);
     }
 
@@ -172,7 +161,7 @@ public class HttpServerApp {
             String aulaIdStr = params.get("aulaId");
             if (aulaIdStr != null) {
                 UUID aulaId = UUID.fromString(aulaIdStr);
-                List<Presenca> presencas = presencaDAO.listarPresencasPorAula(aulaId);
+                List<Presenca> presencas = secretaria.listarPresencas(aulaId);
                 responderJson(exchange, 200, presencas);
             } else {
                 responderJson(exchange, 400, Map.of("erro", "Parâmetro aulaId é obrigatório"));
@@ -186,7 +175,7 @@ public class HttpServerApp {
             boolean presente = Boolean.parseBoolean(data.getOrDefault("presente", "true"));
             String justificativa = data.get("justificativa");
 
-            boolean ok = presencaDAO.salvarPresenca(aulaId, matriculaId, presente, justificativa);
+            boolean ok = secretaria.registrarPresenca(aulaId, matriculaId, presente, justificativa);
             responderJson(exchange, 200, Map.of("sucesso", ok, "mensagem", "Presença registrada"));
         }
     }
@@ -198,21 +187,14 @@ public class HttpServerApp {
         String alunoIdStr = params.getOrDefault("alunoId", "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb01");
         UUID alunoId = UUID.fromString(alunoIdStr);
 
-        List<BoletimDTO> boletim = boletimService.gerarBoletimPorAluno(alunoId);
+        List<BoletimDTO> boletim = secretaria.gerarBoletim(alunoId);
         responderJson(exchange, 200, boletim);
     }
 
     private void handleRegras(HttpExchange exchange) throws IOException {
         if (aplicarCorsEOpcoes(exchange)) return;
 
-        Map<String, Object> regras = new LinkedHashMap<>();
-        regras.put("ldb_frequencia_minima_percentual", motorRegrasService.getConfig().getFrequenciaMinimaLdb());
-        regras.put("ldb_artigo_referencia", "Art. 24, inciso VI da Lei 9.394/1996");
-        regras.put("escola_media_aprovacao_direta", motorRegrasService.getConfig().getMediaAprovacaoDireta());
-        regras.put("escola_media_minima_recuperacao", motorRegrasService.getConfig().getMediaMinimaRecuperacao());
-        regras.put("escola_media_final_com_recuperacao", motorRegrasService.getConfig().getMediaFinalComRecuperacao());
-        regras.put("escola_quantidade_periodos", motorRegrasService.getConfig().getQuantidadePeriodos());
-
+        Map<String, Object> regras = secretaria.obterRegras();
         responderJson(exchange, 200, regras);
     }
 
