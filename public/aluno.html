@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal do Aluno - Boletim e Frequência</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=3">
+    <link rel="stylesheet" href="css/styles.css?v=5">
+    <script src="js/tema.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
@@ -28,6 +29,10 @@
                 <span class="avatar" data-avatar>LM</span>
                 <span class="user-name" id="userName">Lucas Mendes</span>
             </div>
+            <button class="icon-btn" id="temaToggle" type="button" title="Alternar tema">
+                <i data-lucide="moon" class="ico-lua"></i>
+                <i data-lucide="sun" class="ico-sol"></i>
+            </button>
             <button class="icon-btn" title="Sair" onclick="window.schoolApi.logout()"><i data-lucide="log-out"></i></button>
         </div>
     </header>
@@ -66,6 +71,11 @@
         </aside>
 
         <main class="main">
+            <!-- Cartao do aluno -->
+            <div class="class-banner verde">
+                <h1>Meu boletim</h1>
+                <p>Ano letivo 2026</p>
+            </div>
             <!-- Seção: Boletim -->
             <section id="section-boletim" class="section">
                 <div class="main-toolbar">

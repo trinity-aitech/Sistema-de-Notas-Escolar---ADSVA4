@@ -1,15 +1,22 @@
 package br.com.escola.modulos.eventos;
 
+import java.util.UUID;
+
 /**
- * Papel no padrao Observer: Event (Evento).
- * Define os eventos de dominio disparados pelo sistema escolar.
+ * Papel no padrao GoF Observer: Event.
+ * Contrato selado que encapsula os eventos ocorridos no dominio escolar.
  */
-public sealed interface EventoEscolar
-        permits EventoEscolar.NotaLancada, EventoEscolar.PresencaRegistrada {
+public sealed interface EventoEscolar permits EventoEscolar.NotaLancada, EventoEscolar.PresencaRegistrada {
 
-    record NotaLancada(int matriculaId, int avaliacaoId, double valor) implements EventoEscolar {
-    }
+    record NotaLancada(
+            UUID matriculaId,
+            UUID avaliacaoId,
+            double valor
+    ) implements EventoEscolar {}
 
-    record PresencaRegistrada(int matriculaId, int aulaId, boolean presente) implements EventoEscolar {
-    }
+    record PresencaRegistrada(
+            UUID matriculaId,
+            UUID aulaId,
+            boolean presente
+    ) implements EventoEscolar {}
 }

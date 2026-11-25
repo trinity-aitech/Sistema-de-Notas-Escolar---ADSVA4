@@ -14,12 +14,12 @@ Grupo de 6 integrantes. Objetivo: aplicar **3 padrões GoF** no sistema que já 
 
 | # | Integrante | Responsabilidade | Padrão |
 |---|---|---|---|
-| 1 | _(Guilherm)_ | Usuario, Responsavel e fábricas, refatorar login | Factory Method |
-| 2 | _(Romao)_ | `SecretariaFacade` e limpeza do `HttpServerApp` | Facade |
-| 3 | _(Isaac)_ | Núcleo do Observer: eventos, interface e publicador | Observer |
-| 4 | _(Theks)_ | Observers concretos (responsável, histórico, infrequência) | Observer |
-| 5 | _(Gabriel)_ | Testes JUnit, teste manual e integração final | Todos |
-| 6 | _(Pedro)_ | Diagramas UML, README e apresentação | Todos |
+| 1 | Guilherme | Usuario, Responsavel e fábricas, refatorar login | Factory Method |
+| 2 | Romão | `SecretariaFacade` e limpeza do `HttpServerApp` | Facade |
+| 3 | Isaac | Núcleo do Observer: eventos, interface e publicador | Observer |
+| 4 | Thiago | Observers concretos (responsável, histórico, infrequência) | Observer |
+| 5 | Gabriel | Testes JUnit, teste manual e integração final | Todos |
+| 6 | Pedro | Diagramas UML, README e apresentação | Todos |
 
 ---
 
@@ -51,7 +51,7 @@ Estes nomes são o "contrato" entre as pessoas. Ninguém muda sem avisar o grupo
 
 ## 3. Tarefas de cada integrante
 
-### Integrante 1: Factory Method
+### Integrante 1 (Guilherme): Factory Method
 
 **Entrega:** pacote `modulos.usuarios` e login refatorado.
 
@@ -84,16 +84,16 @@ Comentar cada classe com o papel no padrão. Sem emojis nem travessões. Rodar m
 
 ---
 
-### Integrante 2: Facade
+### Integrante 2 (Romão): Facade
 
 **Entrega:** `SecretariaFacade` e `HttpServerApp` enxuto.
 
 **Tarefas:**
-- [ ] Criar `SecretariaFacade` no pacote `modulos.secretaria`.
-- [ ] Implementar os métodos: `login`, `listarTurmas`, `listarAlunosDaTurma`, `listarAvaliacoes`, `listarNotas`, `lancarNota`, `listarAulas`, `listarPresencas`, `registrarPresenca`, `gerarBoletim`, `obterRegras`.
-- [ ] A fachada instancia e esconde `AlunoDAO`, `TurmaDAO`, `NotaDAO`, `PresencaDAO`, `BoletimService` e `MotorRegrasService`.
-- [ ] Refatorar o `HttpServerApp`: ele passa a ter só a `SecretariaFacade` como dependência. Os handlers apenas leem a requisição, chamam a fachada e respondem JSON.
-- [ ] Deixar um ponto claro em `lancarNota` e `registrarPresenca` para chamar `notificar()` depois de salvar (o Integrante 3 entrega o publicador).
+- [x] Criar `SecretariaFacade` no pacote `modulos.secretaria`.
+- [x] Implementar os métodos: `login`, `listarTurmas`, `listarAlunosDaTurma`, `listarAvaliacoes`, `listarNotas`, `lancarNota`, `listarAulas`, `listarPresencas`, `registrarPresenca`, `gerarBoletim`, `obterRegras`.
+- [x] A fachada instancia e esconde `AlunoDAO`, `TurmaDAO`, `NotaDAO`, `PresencaDAO`, `BoletimService` e `MotorRegrasService`.
+- [x] Refatorar o `HttpServerApp`: ele passa a ter só a `SecretariaFacade` como dependência. Os handlers apenas leem a requisição, chamam a fachada e respondem JSON.
+- [x] Deixar um ponto claro em `lancarNota` e `registrarPresenca` para chamar `notificar()` depois de salvar (o Integrante 3 entrega o publicador).
 
 **Depende de:** Integrante 1 (para o login) e Integrante 3 (para o `notificar`). Pode começar já com o resto e plugar os dois depois.
 **Cuidado:** combinar com o Integrante 1 para não gerar conflito no `HttpServerApp`.
@@ -114,7 +114,7 @@ Comentar a classe com o papel Facade. Sem emojis nem travessões. Rodar mvn test
 
 ---
 
-### Integrante 3: Observer (núcleo)
+### Integrante 3 (Isaac): Observer (núcleo)
 
 **Entrega:** pacote `modulos.eventos` com a estrutura base do padrão.
 
@@ -123,7 +123,7 @@ Comentar a classe com o papel Facade. Sem emojis nem travessões. Rodar mvn test
 - [x] Criar a interface `Observador` com `void atualizar(EventoEscolar e)`.
 - [x] Criar `PublicadorEventos` (o Subject) com `adicionarObservador`, `removerObservador` e `notificar`.
 - [x] Tornar a lista de observers segura para uso com Virtual Threads (o servidor usa uma thread por requisição).
-- [ ] Integrar com a `SecretariaFacade`: chamar `notificar()` somente quando `salvarNota` ou `salvarPresenca` retornar `true`, e registrar os observers no construtor da fachada (combinar com os Integrantes 2 e 4).
+- [x] Integrar com a `SecretariaFacade`: chamar `notificar()` somente quando `salvarNota` ou `salvarPresenca` retornar `true`, e registrar os observers no construtor da fachada (combinar com os Integrantes 2 e 4).
 
 **Depende de:** ninguém para a estrutura base. A integração depende do Integrante 2.
 **Quem usa o resultado:** Integrante 4 (implementa a interface), Integrante 5 e 6.
@@ -145,15 +145,15 @@ Comentar cada classe com o papel no padrão (Subject, Observer, Event). Sem emoj
 
 ---
 
-### Integrante 4: Observer (observers concretos)
+### Integrante 4 (Thiago): Observer (observers concretos)
 
 **Entrega:** as três reações do sistema aos eventos.
 
 **Tarefas:**
-- [ ] `ObservadorResponsavel`: ao receber um evento, gera um aviso para o responsável do aluno (pode ser log mais uma lista em memória).
-- [ ] `ObservadorHistorico`: ao receber um evento, recalcula a situação do aluno usando o `MotorRegrasService`.
-- [ ] `ObservadorInfrequencia`: ao receber `PresencaRegistrada`, verifica a frequência e alerta quando ficar abaixo de 80% (essa regra hoje está solta no `BoletimService`, então reaproveitar a lógica, sem duplicar).
-- [ ] Cada observer trata só os eventos que lhe interessam.
+- [x] `ObservadorResponsavel`: ao receber um evento, gera um aviso para o responsável do aluno (pode ser log mais uma lista em memória).
+- [x] `ObservadorHistorico`: ao receber um evento, recalcula a situação do aluno usando o `MotorRegrasService`.
+- [x] `ObservadorInfrequencia`: ao receber `PresencaRegistrada`, verifica a frequência e alerta quando ficar abaixo de 80% (essa regra hoje está solta no `BoletimService`, então reaproveitar a lógica, sem duplicar).
+- [x] Cada observer trata só os eventos que lhe interessam.
 
 **Depende de:** Integrante 3 (interface `Observador` e eventos). Enquanto não sair, combinar a assinatura e começar pela lógica interna.
 **Quem usa o resultado:** Integrante 3 e 2 (registro na fachada), Integrante 5 (testes).
@@ -173,7 +173,7 @@ Cada observer ignora os eventos que não lhe interessam. Comentar com o papel Co
 
 ---
 
-### Integrante 5: Testes e integração final
+### Integrante 5 (Gabriel): Testes e integração final
 
 **Entrega:** testes JUnit passando, sistema rodando e validado de ponta a ponta.
 
@@ -204,7 +204,7 @@ Garantir que MotorRegrasTest continua passando. Rodar mvn test, mostrar o result
 
 ---
 
-### Integrante 6: Diagramas, README e apresentação
+### Integrante 6 (Pedro): Diagramas, README e apresentação
 
 **Entrega:** documentação alinhada com o código final.
 
@@ -218,6 +218,29 @@ Garantir que MotorRegrasTest continua passando. Rodar mvn test, mostrar o result
 
 **Depende de:** nomes combinados na seção 2. Pode começar os diagramas já e ajustar no final conforme o código real.
 **Atenção:** o diagrama deve refletir o que foi **de fato implementado**, e não o que foi planejado.
+
+#### Situação em 25/11 (o que já está pronto para o Integrante 6)
+
+Todo o código dos três padrões já está na `main`, compilando e testado:
+
+- **Factory Method:** `modulos/usuarios` (`Usuario`, `Responsavel`, `UsuarioFactory`, `AlunoFactory`, `ProfessorFactory`, `ResponsavelFactory`).
+- **Facade:** `modulos/secretaria/SecretariaFacade.java`. O `HttpServerApp` depende só dela.
+- **Observer:** `modulos/eventos` (`EventoEscolar`, `Observador`, `PublicadorEventos` e os três observers). Os observers são registrados no construtor da `SecretariaFacade`, que chama `notificar()` depois de salvar uma nota ou presença com sucesso.
+
+A branch `docs/diagramas` foi atualizada com a `main` e não tem mais conflito. A seção "Padrões de Projeto Aplicados" e os diagramas Mermaid continuam no README. O que falta é ajustar esses textos ao código real:
+
+- [ ] `Usuario` também tem `usuarioId()`. `UsuarioFactory` também tem `identificarPerfil(email)` e `montarRespostaLogin(dados)`.
+- [ ] `SecretariaFacade.login` recebe `String email` (não um `Map`). O campo se chama `motorRegrasService`. Além dos métodos já desenhados, a fachada tem `listarTurmas`, `listarAlunosDaTurma`, `listarAvaliacoes`, `listarNotas`, `listarAulas`, `listarPresencas`, `obterRegras` e `getPublicador`.
+- [ ] A fachada usa o Factory no login: acrescentar a seta `SecretariaFacade ..> UsuarioFactory` no diagrama de classes.
+- [ ] No `HttpServerApp` o campo se chama `secretaria`, não `facade`.
+- [ ] Dependências dos observers: `ObservadorHistorico` usa o `BoletimService` (método `calcularSituacao`), e `ObservadorInfrequencia` usa o `PresencaDAO` e o `MotorRegrasService`.
+- [ ] No diagrama de sequência, a notificação é **síncrona** (acontece na mesma thread da requisição, antes da resposta). Trocar a nota "Disparo assíncrono" e mostrar que o `ObservadorInfrequencia` também recebe o evento, mas ignora `NotaLancada`.
+- [ ] Tirar o emoji do título "Padrões de Projeto Aplicados" para combinar com o resto do README.
+- [ ] Apagar `docs/DIVISAO_DE_TAREFAS.md`, que é uma cópia antiga deste arquivo. O arquivo oficial é este, em `public/diagramas/`.
+- [ ] Conferir os SVGs de 13/11 em `public/diagramas/`, porque eles foram feitos antes do código.
+- [ ] Não vai ter apresentação, então os itens de slides e de quem apresenta não precisam mais ser feitos. O `docs/APRESENTACAO.md` pode ser apagado.
+
+Para conferir o comportamento real antes de desenhar, basta rodar o sistema (README, seção "Como executar"), lançar uma nota como professor e olhar o terminal: aparecem as mensagens do `ObservadorResponsavel`, do `ObservadorHistorico` e, quando há falta, do `ObservadorInfrequencia`.
 
 <details>
 <summary>Prompt para o Claude Code</summary>
