@@ -2,6 +2,8 @@
 
 O **Sistema de Notas Escolar (ADSVA4)** é uma plataforma de gestão acadêmica e pedagógica desenvolvida com arquitetura híbrida — oferecendo tanto execução local de alta performance em **Java SE Puro** (utilizando Virtual Threads do Java 21) quanto operação em nuvem via **Serverless Functions na Vercel** integradas ao banco de dados relacional **Supabase (PostgreSQL)**. Projetado para integrar professores, estudantes e familiares em um ambiente único e seguro, o sistema implementa de forma rigorosa as exigências da legislação educacional brasileira (**LDB 9.394/1996, Art. 24, Inciso VI** — obrigatoriedade de 75% de frequência mínima para aprovação) e as normas dos Conselhos Estaduais de Educação (CEE), calculando médias anuais ponderadas, gerenciando períodos de recuperação e emitindo alertas preventivos de infrequência escolar.
 
+> **Para rodar o projeto no seu computador**, siga o passo a passo em [Como Executar Localmente](#-como-executar-localmente). Só é preciso ter o Java 21 instalado: o sistema já vem com dados de demonstração e não precisa de banco de dados.
+
 ---
 
 ## 🎨 Interface Moderna Inspirada no Google Mail (Gmail UI)
@@ -63,27 +65,114 @@ O projeto adota uma arquitetura em duas vias compatível tanto com infraestrutur
 
 ## 🚀 Como Executar Localmente
 
-### 1. Pré-requisitos
-- **Java 21 ou superior** instalado e configurado no PATH.
+O sistema roda sem banco de dados e sem instalar nada além do Java. Quando nenhum banco está configurado, o servidor usa automaticamente dados de demonstração em memória (turma 9A de Matemática, com 3 alunos, notas e presenças). Então os passos abaixo bastam para abrir e testar todas as telas.
 
-### 2. Compilar e Rodar com Scripts PowerShell
-No terminal PowerShell, na raiz do projeto:
+### 1. Instalar o Java 21
 
-```powershell
-# 1. Compila o Java e roda os 8 testes unitários do motor de regras
-.\build.ps1
+O projeto usa recursos do **Java 21** (Virtual Threads e records). Versões anteriores, como o Java 8 ou o 17, não compilam o código.
 
-# 2. Inicia o servidor web na porta 8080
-.\run.ps1
+1. Baixe o **JDK 21** em [adoptium.net](https://adoptium.net/temurin/releases/?version=21) (escolha o seu sistema e o instalador `.msi` no Windows ou `.pkg` no macOS).
+2. Durante a instalação no Windows, marque as opções **"Set JAVA_HOME variable"** e **"Add to PATH"**.
+3. Abra um terminal novo e confira:
+
+```bash
+java -version
 ```
 
-Acesse no navegador:
-- 🌐 **Portal Inicial / Login:** [http://localhost:8080](http://localhost:8080)
-- 👨‍🏫 **Painel do Professor:** [http://localhost:8080/professor.html](http://localhost:8080/professor.html)
-- 🎓 **Portal do Aluno:** [http://localhost:8080/aluno.html](http://localhost:8080/aluno.html)
-- 👨‍👩‍👧 **Portal dos Responsáveis:** [http://localhost:8080/responsavel.html](http://localhost:8080/responsavel.html)
+A saída deve mostrar `21` (por exemplo, `openjdk version "21.0.5"`). Se mostrar outra versão, o Java 21 não está em primeiro lugar no PATH.
 
-*(Observação: Se nenhuma connection string externa for configurada, o servidor conecta automaticamente ao repositório simulado em memória para demonstração imediata).*
+### 2. Baixar o projeto
+
+Com Git:
+
+```bash
+git clone https://github.com/trinity-aitech/Sistema-de-Notas-Escolar---ADSVA4.git
+cd Sistema-de-Notas-Escolar---ADSVA4
+```
+
+Sem Git: na página do repositório, clique em **Code > Download ZIP**, extraia o arquivo e abra um terminal dentro da pasta extraída.
+
+### 3. Compilar e iniciar
+
+#### Windows (PowerShell)
+
+Na pasta do projeto:
+
+```powershell
+# Compila o Java e roda os 8 testes do motor de regras
+powershell -ExecutionPolicy Bypass -File .\build.ps1
+
+# Inicia o servidor na porta 8080 (deixe esta janela aberta)
+powershell -ExecutionPolicy Bypass -File .\run.ps1
+```
+
+O `-ExecutionPolicy Bypass` evita o erro *"a execução de scripts foi desabilitada neste sistema"*, que aparece no Windows quando os scripts nunca foram liberados. Ele vale só para esse comando e não altera nenhuma configuração do computador.
+
+Na primeira vez, o `build.ps1` baixa o driver do PostgreSQL para a pasta `lib/` (precisa de internet). Ao final, ele deve mostrar `Resumo dos testes: 8 passaram, 0 falharam.`
+
+#### macOS e Linux (Terminal)
+
+Na pasta do projeto:
+
+```bash
+# Compila o Java
+mkdir -p bin
+javac -encoding UTF-8 -d bin $(find src/main/java -name "*.java")
+
+# Roda os 8 testes do motor de regras
+javac -encoding UTF-8 -cp bin -d bin src/test/java/br/com/escola/modulos/regras/MotorRegrasTest.java
+java -cp bin br.com.escola.modulos.regras.MotorRegrasTest
+
+# Inicia o servidor na porta 8080 (deixe este terminal aberto)
+java -cp bin br.com.escola.Main
+```
+
+#### IntelliJ IDEA ou Eclipse
+
+Abra a pasta do projeto como projeto **Maven** (o `pom.xml` já está configurado para Java 21), confirme que o SDK do projeto é o Java 21 e execute a classe `br.com.escola.Main`.
+
+### 4. Abrir no navegador
+
+Com o servidor rodando, acesse **[http://localhost:8080](http://localhost:8080)**. Na tela de login, clique em um dos perfis (Professor, Aluno ou Responsável) e em **Acessar o portal**. As credenciais de cada perfil estão em [Perfis de Teste no Sistema](#-perfis-de-teste-no-sistema).
+
+| Tela | Endereço |
+|---|---|
+| Login | [http://localhost:8080](http://localhost:8080) |
+| Professor | [http://localhost:8080/professor.html](http://localhost:8080/professor.html) |
+| Aluno | [http://localhost:8080/aluno.html](http://localhost:8080/aluno.html) |
+| Responsável | [http://localhost:8080/responsavel.html](http://localhost:8080/responsavel.html) |
+
+Entre sempre pela tela de login: as telas de aluno e responsável usam o usuário escolhido no login para saber qual boletim mostrar.
+
+Para parar o servidor, volte ao terminal e pressione **Ctrl+C**.
+
+### Problemas comuns
+
+| Mensagem ou sintoma | Causa e solução |
+|---|---|
+| `invalid target release: 21`, `release version 21 not supported` ou erros com `record` | O terminal está usando um Java antigo. Instale o Java 21 (passo 1) e abra um terminal novo. |
+| `'java' não é reconhecido como um comando` | O Java não está no PATH. Reinstale marcando "Add to PATH" ou abra um terminal novo depois da instalação. |
+| `a execução de scripts foi desabilitada neste sistema` | Rode os scripts com `powershell -ExecutionPolicy Bypass -File`, como no passo 3. |
+| `Address already in use` ou porta 8080 ocupada | Outro programa usa a porta. Inicie em outra porta definindo `SERVER_PORT`, por exemplo no PowerShell: `$env:SERVER_PORT="8081"; powershell -ExecutionPolicy Bypass -File .\run.ps1`, e acesse `http://localhost:8081`. |
+| Tela de aluno ou responsável parada em "Carregando" | A página foi aberta direto pelo endereço. Entre pela tela de login. |
+
+### Opcional: usar um banco PostgreSQL de verdade
+
+Os dados de demonstração ficam só na memória e são perdidos quando o servidor para. Para gravar em um banco real com Docker:
+
+```bash
+docker compose up -d
+```
+
+O `docker-compose.yml` sobe um PostgreSQL 16 na porta 5432 já com as tabelas (`sql/01_schema.sql`) e os dados de exemplo (`sql/02_seed.sql`). As credenciais padrão do servidor Java (`DB_URL`, `DB_USER` e `DB_PASSWORD`, listadas em `.env.example`) já apontam para esse banco. No Windows, basta iniciar o servidor com o `run.ps1`, que já inclui o driver do PostgreSQL. No macOS e no Linux, baixe o driver uma vez e inclua-o no comando:
+
+```bash
+mkdir -p lib
+curl -L -o lib/postgresql-42.7.3.jar https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar
+java -cp "bin:lib/postgresql-42.7.3.jar" br.com.escola.Main
+```
+
+Para usar outro banco, defina essas variáveis de ambiente antes de iniciar o servidor.
 
 ---
 
