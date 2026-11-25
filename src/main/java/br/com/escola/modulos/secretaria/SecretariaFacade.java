@@ -4,6 +4,11 @@ import br.com.escola.modulos.alunos.AlunoDAO;
 import br.com.escola.modulos.alunos.Matricula;
 import br.com.escola.modulos.alunos.Turma;
 import br.com.escola.modulos.alunos.TurmaDAO;
+import br.com.escola.modulos.eventos.EventoEscolar;
+import br.com.escola.modulos.eventos.ObservadorHistorico;
+import br.com.escola.modulos.eventos.ObservadorInfrequencia;
+import br.com.escola.modulos.eventos.ObservadorResponsavel;
+import br.com.escola.modulos.eventos.PublicadorEventos;
 import br.com.escola.modulos.notas.Avaliacao;
 import br.com.escola.modulos.notas.Nota;
 import br.com.escola.modulos.notas.NotaDAO;
@@ -28,6 +33,8 @@ import java.util.UUID;
  * Esconde os subsistemas (AlunoDAO, TurmaDAO, NotaDAO, PresencaDAO,
  * BoletimService e MotorRegrasService), de modo que o HttpServerApp
  * depende apenas desta classe.
+ * Tambem e quem dispara os eventos do padrao Observer: depois de salvar
+ * uma nota ou presenca com sucesso, notifica o PublicadorEventos.
  */
 public class SecretariaFacade {
 
@@ -37,6 +44,7 @@ public class SecretariaFacade {
     private final PresencaDAO presencaDAO;
     private final BoletimService boletimService;
     private final MotorRegrasService motorRegrasService;
+    private final PublicadorEventos publicador;
 
     public SecretariaFacade() {
         this(new AlunoDAO(), new TurmaDAO(), new NotaDAO(), new PresencaDAO(),
@@ -44,16 +52,41 @@ public class SecretariaFacade {
     }
 
     /**
-     * Construtor que recebe os subsistemas prontos. Permite usar dubles nos testes.
+     * Construtor que recebe os subsistemas prontos e registra os observers padrao
+     * (responsavel, historico e infrequencia) usando esses mesmos subsistemas.
      */
     public SecretariaFacade(AlunoDAO alunoDAO, TurmaDAO turmaDAO, NotaDAO notaDAO, PresencaDAO presencaDAO,
                             BoletimService boletimService, MotorRegrasService motorRegrasService) {
+        this(alunoDAO, turmaDAO, notaDAO, presencaDAO, boletimService, motorRegrasService,
+                criarPublicadorPadrao(presencaDAO, boletimService, motorRegrasService));
+    }
+
+    /**
+     * Construtor completo. Permite usar dubles dos DAOs e um publicador proprio nos testes.
+     */
+    public SecretariaFacade(AlunoDAO alunoDAO, TurmaDAO turmaDAO, NotaDAO notaDAO, PresencaDAO presencaDAO,
+                            BoletimService boletimService, MotorRegrasService motorRegrasService,
+                            PublicadorEventos publicador) {
         this.alunoDAO = alunoDAO;
         this.turmaDAO = turmaDAO;
         this.notaDAO = notaDAO;
         this.presencaDAO = presencaDAO;
         this.boletimService = boletimService;
         this.motorRegrasService = motorRegrasService;
+        this.publicador = publicador;
+    }
+
+    private static PublicadorEventos criarPublicadorPadrao(PresencaDAO presencaDAO, BoletimService boletimService,
+                                                           MotorRegrasService motorRegrasService) {
+        PublicadorEventos publicador = new PublicadorEventos();
+        publicador.adicionarObservador(new ObservadorResponsavel());
+        publicador.adicionarObservador(new ObservadorHistorico(boletimService));
+        publicador.adicionarObservador(new ObservadorInfrequencia(presencaDAO, motorRegrasService));
+        return publicador;
+    }
+
+    public PublicadorEventos getPublicador() {
+        return publicador;
     }
 
     // --- Acesso ---
@@ -93,8 +126,9 @@ public class SecretariaFacade {
 
     public boolean lancarNota(UUID avaliacaoId, UUID matriculaId, double valor, String observacao) {
         boolean salvou = notaDAO.salvarNota(avaliacaoId, matriculaId, valor, observacao);
-        // TODO (Integrante 3): quando salvou for true, chamar
-        // publicador.notificar(new EventoEscolar.NotaLancada(matriculaId, avaliacaoId, valor)).
+        if (salvou) {
+            publicador.notificar(new EventoEscolar.NotaLancada(matriculaId, avaliacaoId, valor));
+        }
         return salvou;
     }
 
@@ -110,8 +144,9 @@ public class SecretariaFacade {
 
     public boolean registrarPresenca(UUID aulaId, UUID matriculaId, boolean presente, String justificativa) {
         boolean salvou = presencaDAO.salvarPresenca(aulaId, matriculaId, presente, justificativa);
-        // TODO (Integrante 3): quando salvou for true, chamar
-        // publicador.notificar(new EventoEscolar.PresencaRegistrada(matriculaId, aulaId, presente)).
+        if (salvou) {
+            publicador.notificar(new EventoEscolar.PresencaRegistrada(matriculaId, aulaId, presente));
+        }
         return salvou;
     }
 
