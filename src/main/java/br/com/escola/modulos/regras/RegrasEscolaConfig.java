@@ -7,6 +7,9 @@ public class RegrasEscolaConfig {
     // LDB Art. 24, inciso VI: Frequência mínima de 75% do total de horas letivas
     private double frequenciaMinimaLdb = 75.0;
 
+    // Alerta preventivo de infrequencia: avisa antes de atingir o limite da LDB
+    private double frequenciaAlertaPreventivo = 80.0;
+
     // Regulamento da Escola
     private double mediaAprovacaoDireta = 7.0;
     private double mediaMinimaRecuperacao = 4.0;
@@ -29,6 +32,14 @@ public class RegrasEscolaConfig {
 
     public void setFrequenciaMinimaLdb(double frequenciaMinimaLdb) {
         this.frequenciaMinimaLdb = frequenciaMinimaLdb;
+    }
+
+    public double getFrequenciaAlertaPreventivo() {
+        return frequenciaAlertaPreventivo;
+    }
+
+    public void setFrequenciaAlertaPreventivo(double frequenciaAlertaPreventivo) {
+        this.frequenciaAlertaPreventivo = frequenciaAlertaPreventivo;
     }
 
     public double getMediaAprovacaoDireta() {
