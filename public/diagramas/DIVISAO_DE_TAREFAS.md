@@ -123,7 +123,7 @@ Comentar a classe com o papel Facade. Sem emojis nem travessões. Rodar mvn test
 - [x] Criar a interface `Observador` com `void atualizar(EventoEscolar e)`.
 - [x] Criar `PublicadorEventos` (o Subject) com `adicionarObservador`, `removerObservador` e `notificar`.
 - [x] Tornar a lista de observers segura para uso com Virtual Threads (o servidor usa uma thread por requisição).
-- [ ] Integrar com a `SecretariaFacade`: chamar `notificar()` somente quando `salvarNota` ou `salvarPresenca` retornar `true`, e registrar os observers no construtor da fachada (combinar com os Integrantes 2 e 4).
+- [x] Integrar com a `SecretariaFacade`: chamar `notificar()` somente quando `salvarNota` ou `salvarPresenca` retornar `true`, e registrar os observers no construtor da fachada (combinar com os Integrantes 2 e 4).
 
 **Depende de:** ninguém para a estrutura base. A integração depende do Integrante 2.
 **Quem usa o resultado:** Integrante 4 (implementa a interface), Integrante 5 e 6.
