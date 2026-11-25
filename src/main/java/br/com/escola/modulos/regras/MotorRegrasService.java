@@ -53,6 +53,14 @@ public class MotorRegrasService {
     }
 
     /**
+     * Indica se o percentual de frequência está abaixo do limite de alerta preventivo (80%).
+     * Regra única usada pelo boletim e pelo ObservadorInfrequencia.
+     */
+    public boolean emAlertaInfrequencia(double percentualFrequencia) {
+        return percentualFrequencia < config.getFrequenciaAlertaPreventivo();
+    }
+
+    /**
      * Avalia a situação final do aluno combinando notas, faltas e exame de recuperação.
      */
     public ResultadoAvaliacao avaliarSituacaoFinal(
