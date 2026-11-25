@@ -40,6 +40,10 @@ async function carregarDadosTurma() {
             document.querySelectorAll('[data-turma-label]').forEach(el => { el.textContent = descricao; });
             const sidebarTurma = document.getElementById('sidebarTurma');
             if (sidebarTurma) sidebarTurma.textContent = `${turmaAtual.codigo} · ${turmaAtual.disciplinaNome}`;
+            const bannerTitulo = document.getElementById('bannerTitulo');
+            if (bannerTitulo) bannerTitulo.textContent = turmaAtual.disciplinaNome;
+            const bannerSub = document.getElementById('bannerSub');
+            if (bannerSub) bannerSub.textContent = `Turma ${turmaAtual.codigo} · ${turmaAtual.serie}`;
 
             const tdId = turmaAtual.turmaDisciplinaId;
             const [alunos, avaliacoes, notas] = await Promise.all([
