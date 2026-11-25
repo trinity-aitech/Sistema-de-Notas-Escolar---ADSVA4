@@ -14,12 +14,12 @@ Grupo de 6 integrantes. Objetivo: aplicar **3 padrões GoF** no sistema que já 
 
 | # | Integrante | Responsabilidade | Padrão |
 |---|---|---|---|
-| 1 | _(Guilherm)_ | Usuario, Responsavel e fábricas, refatorar login | Factory Method |
-| 2 | _(Romao)_ | `SecretariaFacade` e limpeza do `HttpServerApp` | Facade |
-| 3 | _(Isaac)_ | Núcleo do Observer: eventos, interface e publicador | Observer |
-| 4 | _(Thiago)_ | Observers concretos (responsável, histórico, infrequência) | Observer |
-| 5 | _(Gabriel)_ | Testes JUnit, teste manual e integração final | Todos |
-| 6 | _(Pedro)_ | Diagramas UML, README e apresentação | Todos |
+| 1 | Guilherme | Usuario, Responsavel e fábricas, refatorar login | Factory Method |
+| 2 | Romão | `SecretariaFacade` e limpeza do `HttpServerApp` | Facade |
+| 3 | Isaac | Núcleo do Observer: eventos, interface e publicador | Observer |
+| 4 | Thiago | Observers concretos (responsável, histórico, infrequência) | Observer |
+| 5 | Gabriel | Testes JUnit, teste manual e integração final | Todos |
+| 6 | Pedro | Diagramas UML, README e apresentação | Todos |
 
 ---
 
@@ -51,7 +51,7 @@ Estes nomes são o "contrato" entre as pessoas. Ninguém muda sem avisar o grupo
 
 ## 3. Tarefas de cada integrante
 
-### Integrante 1: Factory Method
+### Integrante 1 (Guilherme): Factory Method
 
 **Entrega:** pacote `modulos.usuarios` e login refatorado.
 
@@ -84,7 +84,7 @@ Comentar cada classe com o papel no padrão. Sem emojis nem travessões. Rodar m
 
 ---
 
-### Integrante 2: Facade
+### Integrante 2 (Romão): Facade
 
 **Entrega:** `SecretariaFacade` e `HttpServerApp` enxuto.
 
@@ -114,7 +114,7 @@ Comentar a classe com o papel Facade. Sem emojis nem travessões. Rodar mvn test
 
 ---
 
-### Integrante 3: Observer (núcleo)
+### Integrante 3 (Isaac): Observer (núcleo)
 
 **Entrega:** pacote `modulos.eventos` com a estrutura base do padrão.
 
@@ -145,7 +145,7 @@ Comentar cada classe com o papel no padrão (Subject, Observer, Event). Sem emoj
 
 ---
 
-### Integrante 4: Observer (observers concretos)
+### Integrante 4 (Thiago): Observer (observers concretos)
 
 **Entrega:** as três reações do sistema aos eventos.
 
@@ -173,7 +173,7 @@ Cada observer ignora os eventos que não lhe interessam. Comentar com o papel Co
 
 ---
 
-### Integrante 5: Testes e integração final
+### Integrante 5 (Gabriel): Testes e integração final
 
 **Entrega:** testes JUnit passando, sistema rodando e validado de ponta a ponta.
 
@@ -204,7 +204,7 @@ Garantir que MotorRegrasTest continua passando. Rodar mvn test, mostrar o result
 
 ---
 
-### Integrante 6: Diagramas, README e apresentação
+### Integrante 6 (Pedro): Diagramas, README e apresentação
 
 **Entrega:** documentação alinhada com o código final.
 
