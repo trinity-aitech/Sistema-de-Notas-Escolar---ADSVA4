@@ -17,7 +17,7 @@ Grupo de 6 integrantes. Objetivo: aplicar **3 padrões GoF** no sistema que já 
 | 1 | _(Guilherm)_ | Usuario, Responsavel e fábricas, refatorar login | Factory Method |
 | 2 | _(Romao)_ | `SecretariaFacade` e limpeza do `HttpServerApp` | Facade |
 | 3 | _(Isaac)_ | Núcleo do Observer: eventos, interface e publicador | Observer |
-| 4 | _(Theks)_ | Observers concretos (responsável, histórico, infrequência) | Observer |
+| 4 | _(Thiago)_ | Observers concretos (responsável, histórico, infrequência) | Observer |
 | 5 | _(Gabriel)_ | Testes JUnit, teste manual e integração final | Todos |
 | 6 | _(Pedro)_ | Diagramas UML, README e apresentação | Todos |
 
@@ -150,10 +150,10 @@ Comentar cada classe com o papel no padrão (Subject, Observer, Event). Sem emoj
 **Entrega:** as três reações do sistema aos eventos.
 
 **Tarefas:**
-- [ ] `ObservadorResponsavel`: ao receber um evento, gera um aviso para o responsável do aluno (pode ser log mais uma lista em memória).
-- [ ] `ObservadorHistorico`: ao receber um evento, recalcula a situação do aluno usando o `MotorRegrasService`.
-- [ ] `ObservadorInfrequencia`: ao receber `PresencaRegistrada`, verifica a frequência e alerta quando ficar abaixo de 80% (essa regra hoje está solta no `BoletimService`, então reaproveitar a lógica, sem duplicar).
-- [ ] Cada observer trata só os eventos que lhe interessam.
+- [x] `ObservadorResponsavel`: ao receber um evento, gera um aviso para o responsável do aluno (pode ser log mais uma lista em memória).
+- [x] `ObservadorHistorico`: ao receber um evento, recalcula a situação do aluno usando o `MotorRegrasService`.
+- [x] `ObservadorInfrequencia`: ao receber `PresencaRegistrada`, verifica a frequência e alerta quando ficar abaixo de 80% (essa regra hoje está solta no `BoletimService`, então reaproveitar a lógica, sem duplicar).
+- [x] Cada observer trata só os eventos que lhe interessam.
 
 **Depende de:** Integrante 3 (interface `Observador` e eventos). Enquanto não sair, combinar a assinatura e começar pela lógica interna.
 **Quem usa o resultado:** Integrante 3 e 2 (registro na fachada), Integrante 5 (testes).
