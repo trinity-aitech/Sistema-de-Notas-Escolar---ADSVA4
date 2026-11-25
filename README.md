@@ -1,184 +1,163 @@
-# Sistema de Notas Escolar - ADSVA4
+# Sistema de Notas Escolar (ADSVA4)
 
-O **Sistema de Notas Escolar (ADSVA4)** é uma plataforma de gestão acadêmica e pedagógica desenvolvida com arquitetura híbrida — oferecendo tanto execução local de alta performance em **Java SE Puro** (utilizando Virtual Threads do Java 21) quanto operação em nuvem via **Serverless Functions na Vercel** integradas ao banco de dados relacional **Supabase (PostgreSQL)**. Projetado para integrar professores, estudantes e familiares em um ambiente único e seguro, o sistema implementa de forma rigorosa as exigências da legislação educacional brasileira (**LDB 9.394/1996, Art. 24, Inciso VI** — obrigatoriedade de 75% de frequência mínima para aprovação) e as normas dos Conselhos Estaduais de Educação (CEE), calculando médias anuais ponderadas, gerenciando períodos de recuperação e emitindo alertas preventivos de infrequência escolar.
+Sistema web para uma escola lançar notas e frequência e para alunos e responsáveis acompanharem o boletim. Foi feito para a disciplina ADSVA4.
 
----
+O professor lança as notas dos quatro bimestres e faz a chamada. O sistema calcula a média e a situação final de cada aluno seguindo duas regras:
 
-## 🎨 Interface Moderna Inspirada no Google Mail (Gmail UI)
+- **LDB 9.394/96, Art. 24, VI:** o aluno precisa de pelo menos 75% de frequência para ser aprovado, independente da nota.
+- **Regimento da escola:** média 7,0 aprova direto, média entre 4,0 e 6,9 vai para recuperação, e depois da recuperação a média final precisa ser pelo menos 5,0.
 
-O frontend foi redesenhado do zero adotando o padrão visual e ergonômico do **Gmail**:
+Quando a frequência fica abaixo de 80%, o boletim mostra um aviso antes de o aluno chegar ao limite da LDB.
 
-- **Barra Superior com Busca Global:** Campo de pesquisa instantânea para filtrar alunos, matrículas ou matérias rapidamente (atalho `/`).
-- **Sidebar Retrátil com Seções em Pílula:** 
-  - Alternância rápida entre seções sem recarregar a página (com persistência via hash `#secao`).
-  - **Botão Principal Contextual (*Compose Button*):** Salva as alterações da seção ativa com um único clique.
-  - **Menu de Turmas e Dependentes:** Visualização do contexto atual de aula ou do filho matriculado.
-- **Painel Central com Foco em Produtividade:**
-  - Superfícies escuras de alto contraste com cantos arredondados, garantindo legibilidade máxima de números e notas.
-  - O papel de parede fotográfico foi sutilmente desfocado e escurecido em segundo plano para não competir com as tabelas.
-  - Remoção de badges repetitivos no topo, mantendo avisos legais apenas quando há risco real de infrequência.
-- **Responsividade Total:** Suporte a gaveta lateral retrátil (*drawer*) e overlay escurecido em telas de celular e tablets.
+**Para rodar no seu computador, veja [Como executar](#como-executar).** Só precisa do Java 21. O sistema já vem com dados de exemplo e funciona sem banco de dados.
 
----
+## Como executar
 
-## 🏛️ Arquitetura do Sistema
+### 1. Instale o Java 21
 
-O projeto adota uma arquitetura em duas vias compatível tanto com infraestrutura local quanto com deploy em nuvem sem servidores dedicados:
+O código usa recursos do Java 21 (records e Virtual Threads), então o Java 8 ou o 17 não compilam o projeto.
 
-```
-                  ┌────────────────────────────────────────────────────────┐
-                  │                 Frontend Web (Gmail UI)                │
-                  │   HTML5 + CSS3 Escuro + Vanilla JS + Lucide Icons      │
-                  └───────────┬────────────────────────────────┬───────────┘
-                              │                                │
-            (Requisições HTTP locais)             (Requisições Serverless / Nuvem)
-                              │                                │
-                              ▼                                ▼
-            ┌───────────────────────────────────┐    ┌───────────────────────────────────┐
-            │       Backend Monolítico Java     │    │   Vercel Serverless Functions     │
-            │   Java 21 com Virtual Threads     │    │   Node.js ESM (pg connection pool)│
-            │   com.sun.net.httpserver nativo   │    │   Roteamento via vercel.json      │
-            └─────────────────┬─────────────────┘    └─────────────────┬─────────────────┘
-                              │                                        │
-                              └───────────────────┬────────────────────┘
-                                                  │
-                                                  ▼
-                                   ┌─────────────────────────────┐
-                                   │  PostgreSQL / Supabase      │
-                                   │  Esquema UML Normalizado    │
-                                   │  10 Tabelas + Índices       │
-                                   └─────────────────────────────┘
+1. Baixe o JDK 21 em [adoptium.net](https://adoptium.net/temurin/releases/?version=21). No Windows use o instalador `.msi`, no macOS o `.pkg`.
+2. No Windows, marque as opções "Set JAVA_HOME variable" e "Add to PATH" durante a instalação.
+3. Abra um terminal novo e confira com `java -version`. A versão mostrada tem que começar com 21.
+
+### 2. Baixe o projeto
+
+```bash
+git clone https://github.com/trinity-aitech/Sistema-de-Notas-Escolar---ADSVA4.git
+cd Sistema-de-Notas-Escolar---ADSVA4
 ```
 
-### Principais Tecnologias
-- **Frontend:** HTML5, CSS3 moderno, Vanilla JavaScript ES6+, Lucide Icons e SweetAlert2.
-- **Backend Local:** Java 21+ com `com.sun.net.httpserver.HttpServer` e `Executors.newVirtualThreadPerTaskExecutor()`. Sem frameworks pesados (zero Spring/Hibernate).
-- **Backend Nuvem:** Serverless Functions em Node.js (`api/`) com pool nativo `pg` conectando ao Supabase via SSL.
-- **Banco de Dados:** PostgreSQL com esquema estritamente alinhado ao Diagrama de Classes UML:
-  - Herança *Table-per-Subclass*: `usuarios` $\rightarrow$ `professores`, `responsaveis`, `alunos`.
-  - Agregações e Associações: `cursos`, `disciplinas`, `historicos`, `notas`, `presencas` e `regras_escola`.
-- **Motor de Regras:** 8 testes unitários cobrindo todos os cenários da LDB 9.394/96 e normas escolares.
+Também dá para baixar pelo botão Code > Download ZIP aqui no GitHub e extrair a pasta.
 
----
+### 3. Compile e inicie o servidor
 
-## 🚀 Como Executar Localmente
-
-### 1. Pré-requisitos
-- **Java 21 ou superior** instalado e configurado no PATH.
-
-### 2. Compilar e Rodar com Scripts PowerShell
-No terminal PowerShell, na raiz do projeto:
+**Windows (PowerShell), dentro da pasta do projeto:**
 
 ```powershell
-# 1. Compila o Java e roda os 8 testes unitários do motor de regras
-.\build.ps1
-
-# 2. Inicia o servidor web na porta 8080
-.\run.ps1
+powershell -ExecutionPolicy Bypass -File .\build.ps1
+powershell -ExecutionPolicy Bypass -File .\run.ps1
 ```
 
-Acesse no navegador:
-- 🌐 **Portal Inicial / Login:** [http://localhost:8080](http://localhost:8080)
-- 👨‍🏫 **Painel do Professor:** [http://localhost:8080/professor.html](http://localhost:8080/professor.html)
-- 🎓 **Portal do Aluno:** [http://localhost:8080/aluno.html](http://localhost:8080/aluno.html)
-- 👨‍👩‍👧 **Portal dos Responsáveis:** [http://localhost:8080/responsavel.html](http://localhost:8080/responsavel.html)
+O primeiro comando compila o projeto e roda os 8 testes do motor de regras. No fim ele deve mostrar `Resumo dos testes: 8 passaram, 0 falharam.` Na primeira vez ele também baixa o driver do PostgreSQL para a pasta `lib/`, então precisa de internet.
 
-*(Observação: Se nenhuma connection string externa for configurada, o servidor conecta automaticamente ao repositório simulado em memória para demonstração imediata).*
+O segundo comando sobe o servidor na porta 8080. Deixe a janela aberta enquanto estiver usando o sistema.
 
----
+O `-ExecutionPolicy Bypass` é porque o Windows bloqueia scripts `.ps1` por padrão. Ele libera só esse comando e não muda nenhuma configuração do computador.
 
-## ⚡ Conexão com Supabase e Deploy na Vercel
+**macOS e Linux, dentro da pasta do projeto:**
 
-### 1. Banco de Dados no Supabase
-1. No [Supabase](https://supabase.com), abra o **SQL Editor**.
-2. Execute o arquivo [`sql/01_schema.sql`](sql/01_schema.sql) para criar as 10 tabelas e índices.
-3. Execute o arquivo [`sql/02_seed.sql`](sql/02_seed.sql) para popular os dados de demonstração.
+```bash
+mkdir -p bin
+javac -encoding UTF-8 -d bin $(find src/main/java -name "*.java")
 
-### 2. Deploy Automático na Vercel
-1. Importe o repositório no [Vercel Dashboard](https://vercel.com).
-2. Em **Settings ➔ Environments** (ou Environment Variables), adicione:
-   - **Key:** `DATABASE_URL`
-   - **Value:** `postgresql://postgres:SUA_SENHA@db.SEU_PROJETO.supabase.co:5432/postgres`
-3. Salve e execute um **Redeploy**.
-4. Teste o status da sua API acessando `https://seu-projeto.vercel.app/api`. O endpoint retornará:
-   ```json
-   {
-     "status": "online",
-     "database": "conectado",
-     "totalUsuarios": 6,
-     "mensagem": "API Serverless do Sistema de Notas Escolar ativa"
-   }
-   ```
+# testes do motor de regras
+javac -encoding UTF-8 -cp bin -d bin src/test/java/br/com/escola/modulos/regras/MotorRegrasTest.java
+java -cp bin br.com.escola.modulos.regras.MotorRegrasTest
 
----
+# servidor na porta 8080
+java -cp bin br.com.escola.Main
+```
 
-## 🔑 Perfis de Teste no Sistema
+**IntelliJ ou Eclipse:** abra a pasta como projeto Maven, escolha o Java 21 como SDK e rode a classe `br.com.escola.Main`.
 
-| Perfil | E-mail de Teste | Senha | Seções na Sidebar |
+### 4. Abra no navegador
+
+Acesse [http://localhost:8080](http://localhost:8080), escolha um perfil na tela de login e clique em "Acessar o portal". Entre sempre pela tela de login, porque as telas de aluno e responsável usam o usuário escolhido ali para saber qual boletim mostrar.
+
+| Perfil | E-mail | Senha | O que dá para fazer |
 |---|---|---|---|
-| **Professor** | `carlos.silva@escola.com` | `123456` | **Notas** (lançamento e cálculo de médias) e **Chamada** (diário de frequência e justificativas) |
-| **Aluno** | `lucas.mendes@escola.com` | `123456` | **Boletim** (notas e médias anuais), **Frequência** (horas/faltas acumuladas) e **Critérios** (regras LDB) |
-| **Responsável** | `maria.mendes@email.com` | `123456` | **Boletim** (desempenho do dependente), **Frequência** (acompanhamento preventivo) e **Contato** |
+| Professor | `carlos.silva@escola.com` | `123456` | Lançar notas e fazer a chamada da turma 9A |
+| Aluno | `lucas.mendes@escola.com` | `123456` | Ver boletim, frequência e critérios de aprovação |
+| Responsável | `maria.mendes@email.com` | `123456` | Acompanhar o boletim e a frequência do filho |
 
----
+Os dados de exemplo são da turma 9A de Matemática, com três alunos: o Lucas está aprovado, a Beatriz está em recuperação e o Gabriel está reprovado por falta. Para parar o servidor, aperte Ctrl+C no terminal.
 
-## 📁 Estrutura de Diretórios
+### Se der erro
+
+| Erro | O que fazer |
+|---|---|
+| `invalid target release: 21` ou erros envolvendo `record` | O terminal está usando um Java mais antigo. Instale o Java 21 e abra um terminal novo. |
+| `'java' não é reconhecido como um comando` | O Java não está no PATH. Reinstale marcando "Add to PATH" ou abra um terminal novo. |
+| `a execução de scripts foi desabilitada neste sistema` | Rode os scripts com `powershell -ExecutionPolicy Bypass -File`, como no passo 3. |
+| `Address already in use` | A porta 8080 está ocupada. No PowerShell, rode `$env:SERVER_PORT="8081"` antes do `run.ps1` e acesse `http://localhost:8081`. |
+| Tela de aluno ou responsável parada em "Carregando" | A página foi aberta direto pelo endereço. Entre pela tela de login. |
+
+### Usando um banco PostgreSQL (opcional)
+
+Sem banco, as notas lançadas ficam só na memória e somem quando o servidor para. Para gravar de verdade, dá para subir um PostgreSQL com Docker:
+
+```bash
+docker compose up -d
+```
+
+Isso cria o banco `escola_db` na porta 5432 já com as tabelas (`sql/01_schema.sql`) e os dados de exemplo (`sql/02_seed.sql`). O servidor Java já vem configurado para esse banco (veja `.env.example`), então no Windows é só rodar o `run.ps1` de novo. No macOS e no Linux é preciso baixar o driver e colocar no comando:
+
+```bash
+mkdir -p lib
+curl -L -o lib/postgresql-42.7.3.jar https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar
+java -cp "bin:lib/postgresql-42.7.3.jar" br.com.escola.Main
+```
+
+Para usar outro banco, defina as variáveis `DB_URL`, `DB_USER` e `DB_PASSWORD` antes de iniciar o servidor.
+
+## Como o projeto está organizado
+
+O back-end é um monólito em Java 21 sem framework. O servidor HTTP é o `com.sun.net.httpserver` que já vem no Java, com uma Virtual Thread por requisição. O acesso ao banco é feito com JDBC puro, em classes DAO. O front-end é HTML, CSS e JavaScript sem framework, servido pelo próprio servidor Java.
+
+Também existe uma versão da API em Node.js na pasta `api/`, usada quando o projeto é publicado na Vercel.
 
 ```
-Sistema-de-Notas-Escolar---ADSVA4/
-├── build.ps1                       # Compilador e executor de testes em Java puro
-├── run.ps1                         # Inicializador do servidor web Java
-├── vercel.json                     # Roteamento de rewrites e headers CORS da Vercel
-├── package.json                    # Dependências Serverless (pg) e tipo module
-├── .env.example                    # Exemplo de variáveis de ambiente
+Navegador (HTML + CSS + JavaScript)
+        |
+        |  requisições /api/...
+        v
+Servidor Java 21 (local)   ou   Funções Node.js (Vercel)
+        |
+        v
+PostgreSQL (local, Docker ou Supabase)
+```
+
+O banco tem 10 tabelas: `usuarios`, `professores`, `alunos`, `responsaveis`, `cursos`, `disciplinas`, `historicos`, `notas`, `presencas` e `regras_escola`. Professor, aluno e responsável ficam cada um na sua tabela, ligados a `usuarios`.
+
+```
+├── build.ps1, run.ps1          scripts para compilar e rodar no Windows
+├── docker-compose.yml          PostgreSQL local com as tabelas e dados de exemplo
 ├── sql/
-│   ├── 01_schema.sql               # Esquema relacional das 9 classes UML + regras
-│   └── 02_seed.sql                 # Carga inicial de turmas, alunos, notas e faltas
-├── lib/
-│   └── postgresql-42.7.3.jar       # Driver JDBC oficial PostgreSQL
-├── api/                            # Camada Serverless Vercel
-│   ├── index.js                    # Handler principal com conexão pg.Pool e endpoints REST
-│   ├── turmas.js                   # Rota direta /api/turmas
-│   ├── notas.js                    # Rota direta /api/notas
-│   ├── presencas.js                # Rota direta /api/presencas
-│   ├── boletim.js                  # Rota direta /api/boletim
-│   ├── avaliacoes.js               # Rota direta /api/avaliacoes
-│   ├── aulas.js                    # Rota direta /api/aulas
-│   ├── regras.js                   # Rota direta /api/regras
-│   ├── turmas/alunos.js            # Rota direta /api/turmas/alunos
-│   └── auth/login.js               # Rota direta /api/auth/login
-├── public/                         # Frontend Web Estático (Interface Gmail UI)
-│   ├── index.html                  # Tela de Acesso e seleção rápida de perfis
-│   ├── professor.html              # Painel do Professor com sidebar (Notas / Chamada)
-│   ├── aluno.html                  # Portal do Aluno com sidebar (Boletim / Frequência / Critérios)
-│   ├── responsavel.html            # Portal dos Pais com sidebar (Boletim / Frequência / Contato)
-│   ├── assets/
-│   │   └── bg.jpg                  # Papel de parede fotográfico de alta resolução
-│   ├── css/
-│   │   └── styles.css              # Tema escuro, barra superior, sidebar em pílula e tabelas
-│   └── js/
-│       ├── api.js                  # Cliente unificado de consumo REST
-│       ├── layout.js               # Gerenciador global de navegação da sidebar, busca e avatar
-│       ├── professor.js            # Lógica do diário de classe e lançamento de notas
-│       ├── aluno.js                # Lógica de renderização do boletim acadêmico
-│       └── responsavel.js          # Lógica de acompanhamento dos dependentes
+│   ├── 01_schema.sql           criação das tabelas
+│   └── 02_seed.sql             dados de exemplo
+├── api/                        versão da API em Node.js para a Vercel
+├── public/                     front-end
+│   ├── index.html              login
+│   ├── professor.html          notas e chamada
+│   ├── aluno.html              boletim, frequência e critérios
+│   ├── responsavel.html        acompanhamento do filho
+│   ├── css/styles.css
+│   └── js/                     api.js (chamadas à API), layout.js e um arquivo por tela
 └── src/
     ├── main/java/br/com/escola/
-    │   ├── Main.java               # Inicializador do HttpServer com Virtual Threads
-    │   ├── config/DatabaseConfig.java # Conexão JDBC compatível com DATABASE_URL e Supabase
-    │   ├── http/                   # Handlers REST e servidor HTTP estático
+    │   ├── Main.java           inicia o servidor
+    │   ├── config/             conexão com o banco
+    │   ├── http/               rotas da API e arquivos estáticos
     │   └── modulos/
-    │       ├── alunos/             # Modelos de Alunos e Turmas
-    │       ├── notas/              # Modelos de Avaliações e Notas
-    │       ├── presenca/           # Modelos de Faltas e Diário
-    │       └── regras/             # Motor LDB (Art. 24) e Regulamento Escolar
+    │       ├── alunos/         alunos, turmas e matrículas
+    │       ├── notas/          avaliações e notas
+    │       ├── presenca/       aulas e presenças
+    │       ├── eventos/        padrão Observer (eventos e publicador)
+    │       └── regras/         motor de regras (LDB e regimento) e boletim
     └── test/java/br/com/escola/
-        └── modulos/regras/
-            └── MotorRegrasTest.java # 8 testes unitários do motor de regras
+        └── modulos/regras/MotorRegrasTest.java
 ```
 
----
+A API tem as rotas `/api/auth/login`, `/api/turmas`, `/api/turmas/alunos`, `/api/avaliacoes`, `/api/notas`, `/api/aulas`, `/api/presencas`, `/api/boletim` e `/api/regras`.
 
-## 📜 Licença e Conformidade
+## Publicando na Vercel com Supabase
 
-Este projeto é disponibilizado sob a licença **MIT** e foi desenvolvido para a disciplina **ADSVA4**, em conformidade com as diretrizes do **MEC/LDB 9.394/96** e resoluções complementares do Conselho Estadual de Educação (CEE).
+1. No [Supabase](https://supabase.com), abra o SQL Editor e rode `sql/01_schema.sql` e depois `sql/02_seed.sql`.
+2. Importe o repositório na [Vercel](https://vercel.com).
+3. Em Settings > Environment Variables, crie a variável `DATABASE_URL` com a connection string do Supabase, no formato `postgresql://postgres:SUA_SENHA@db.SEU_PROJETO.supabase.co:5432/postgres`.
+4. Faça um Redeploy. Para conferir se a API conectou no banco, acesse `https://seu-projeto.vercel.app/api`. A resposta deve ter `"database": "conectado"`.
+
+## Integrantes
+
+Guilherme, Romão, Isaac, Thiago, Gabriel e Pedro. A divisão de tarefas está em [`public/diagramas/DIVISAO_DE_TAREFAS.md`](public/diagramas/DIVISAO_DE_TAREFAS.md).
