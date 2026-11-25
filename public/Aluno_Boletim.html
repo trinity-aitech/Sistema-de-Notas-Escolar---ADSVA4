@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Boletim — Portal do Aluno | Colégio Horizonte</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+  <a href="Login.html" class="sidebar-brand">
+    <div class="brand-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 20.1667C13.75 17.4167 16.5 17.4167 20.1666 18.3333V3.66668C16.5 2.75001 13.75 2.75001 11 5.50001C8.24998 2.75001 4.58331 2.75001 1.83331 3.66668V18.3333C5.49998 17.4167 8.24998 17.4167 11 20.1667ZM11 5.50001V20.1667" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" stroke="white"/></svg></div>
+    <span class="brand-name">escola</span>
+  </a>
+  <div class="unit-selector">
+    <div>
+      <div class="unit-label">UNIDADE ESCOLAR</div>
+      <div class="unit-name">Colégio Horizonte</div>
+    </div>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#777777" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="Aluno_Geral.html" class="nav-item"><svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M9.49998 17.4167C11.875 15.0417 14.25 15.0417 17.4166 15.8333V3.16667C14.25 2.375 11.875 2.375 9.49998 4.75C7.12498 2.375 3.95831 2.375 1.58331 3.16667V15.8333C4.74998 15.0417 7.12498 15.0417 9.49998 17.4167ZM9.49998 4.75V17.4167" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Visão geral</span></a>
+<a href="Aluno_Boletim.html" class="nav-item active"><svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M3.16669 2.375V16.625H16.625M7.12502 12.6667V8.70833M11.0834 12.6667V4.75M15.0417 12.6667V7.125" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Meu boletim</span></a>
+
+  </nav>
+  <div class="sidebar-spacer"></div>
+  <div class="sidebar-footer">
+    <a href="#" class="footer-nav-item" onclick="alert('Configurações da conta'); return false;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13.3334 10C13.3334 11.841 11.841 13.3334 10 13.3334C8.15907 13.3334 6.66669 11.841 6.66669 10C6.66669 8.15907 8.15907 6.66669 10 6.66669C11.841 6.66669 13.3334 8.15907 13.3334 10Z" stroke="#727272" stroke-width="1.65"/><path d="M10 1.66669V4.16669M10 15.8334V18.3334M1.66669 10H4.16669M15.8334 10H18.3334M4.16669 4.16669L5.83335 5.83335M14.1667 14.1667L15.8334 15.8334M4.16669 15.8334L5.83335 14.1667M14.1667 5.83335L15.8334 4.16669" stroke="#727272" stroke-width="1.65" stroke-linecap="round"/></svg>
+      <span>Configurações</span>
+    </a>
+    <a href="#" class="footer-nav-item" onclick="alert('Central de ajuda do Colégio Horizonte'); return false;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="#727272" stroke-width="1.65"/><path d="M7.58331 7.5C7.79061 6.95969 8.17893 6.50804 8.68204 6.22207C9.18515 5.9361 9.7719 5.83354 10.3422 5.93186C10.9125 6.03019 11.431 6.32332 11.8093 6.76125C12.1876 7.19919 12.4023 7.75481 12.4166 8.33333C12.4166 10 9.91665 10.8333 9.91665 10.8333M9.99998 13.3333H10.0083" stroke="#727272" stroke-width="1.65" stroke-linecap="round"/></svg>
+      <span>Central de ajuda</span>
+    </a>
+    <div class="divider-h"></div>
+    <div class="year-badge">Ano letivo 2026</div>
+  </div>
+</aside>
+    <div class="main-wrapper">
+      <header class="topbar">
+  <div class="breadcrumb">
+    <a href="Login.html" class="breadcrumb-root">Portal escolar</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Meu boletim</span>
+  </div>
+  <div class="topbar-right">
+    <span class="role-switch-label">Perfil de acesso</span>
+    <div class="role-switcher">
+      <a href="Professor_Turmas.html" class="role-tab">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 13.75C9.375 11.875 11.25 11.875 13.75 12.5V2.49999C11.25 1.87499 9.375 1.87499 7.5 3.74999C5.625 1.87499 3.125 1.87499 1.25 2.49999V12.5C3.75 11.875 5.625 11.875 7.5 13.75ZM7.5 3.74999V13.75" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Professor</span>
+      </a>
+      <a href="Aluno_Geral.html" class="role-tab active">
+        <span>Aluno</span>
+      </a>
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="user-profile">
+      <div class="user-info">
+        <span class="user-name">Ana Beatriz Lima</span>
+        <span class="user-role">Aluna • 9º ano A</span>
+      </div>
+      <a href="Login.html" class="logout-btn">Sair</a>
+    </div>
+  </div>
+</header>
+      <main class="content-area">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title">Meu boletim</h1>
+            <p class="page-subtitle">Ana Beatriz Lima • 9º ano A • Matrícula 20260018</p>
+          </div>
+          <select class="select-control">
+            <option>Ano letivo 2026</option>
+            <option>Ano letivo 2025</option>
+            <option>Ano letivo 2024</option>
+            <option>Ano letivo 2023</option>
+          </select>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Matérias cursadas</span>
+              <span class="kpi-value">08</span>
+            </div>
+            <span class="kpi-desc">Disciplinas do ano letivo</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Aprovadas</span>
+              <span class="kpi-value">06</span>
+            </div>
+            <span class="kpi-desc">Média e presença suficientes</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Reprovadas</span>
+              <span class="kpi-value">02</span>
+            </div>
+            <span class="kpi-desc">Consulte os motivos no boletim</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Frequência geral</span>
+              <span class="kpi-value">83%</span>
+            </div>
+            <span class="kpi-desc">Mínimo de 70% por matéria</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Notas e frequência por matéria</h2>
+              <p class="panel-subtitle">Resultado final de 2026 • Notas de 0 a 10</p>
+            </div>
+            <button type="button" class="btn-outline" onclick="window.print()">Baixar boletim</button>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Matéria</th>
+                <th class="text-center">1º Bim.</th>
+                <th class="text-center">2º Bim.</th>
+                <th class="text-center">3º Bim.</th>
+                <th class="text-center">4º Bim.</th>
+                <th class="text-center">Média</th>
+                <th class="text-center">Frequência</th>
+                <th>Situação final</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-semibold">Matemática</td>
+                <td class="text-center">8,0</td>
+                <td class="text-center">7,5</td>
+                <td class="text-center">8,5</td>
+                <td class="text-center">8,0</td>
+                <td class="text-center font-semibold">8,0</td>
+                <td class="text-center">95%</td>
+                <td><span class="status-badge status-approved">Aprovado</span></td>
+              </tr>
+              <tr>
+                <td class="font-semibold">Língua Portuguesa</td>
+                <td class="text-center">7,0</td>
+                <td class="text-center">8,0</td>
+                <td class="text-center">7,5</td>
+                <td class="text-center">7,5</td>
+                <td class="text-center font-semibold">7,5</td>
+                <td class="text-center">90%</td>
+                <td><span class="status-badge status-approved">Aprovado</span></td>
+              </tr>
+              <tr>
+                <td class="font-semibold">História</td>
+                <td class="text-center">6,0</td>
+                <td class="text-center">6,5</td>
+                <td class="text-center">5,5</td>
+                <td class="text-center">6,0</td>
+                <td class="text-center font-semibold">6,0</td>
+                <td class="text-center">70%</td>
+                <td><span class="status-badge status-approved">Aprovado</span></td>
+              </tr>
+              <tr>
+                <td class="font-semibold">Geografia</td>
+                <td class="text-center">6,0</td>
+                <td class="text-center">7,0</td>
+                <td class="text-center">6,0</td>
+                <td class="text-center">7,0</td>
+                <td class="text-center font-semibold">6,5</td>
+                <td class="text-center">85%</td>
+                <td><span class="status-badge status-approved">Aprovado</span></td>
+              </tr>
+              <tr>
+                <td class="font-semibold">Ciências</td>
+                <td class="text-center">8,0</td>
+                <td class="text-center">9,0</td>
+                <td class="text-center">8,0</td>
+                <td class="text-center">9,0</td>
+                <td class="text-center font-semibold">8,5</td>
+                <td class="text-center">92%</td>
+                <td><span class="status-badge status-approved">Aprovado</span></td>
+              </tr>
+              <tr>
+                <td class="font-semibold">Língua Inglesa</td>
+                <td class="text-center">7,0</td>
+                <td class="text-center">6,5</td>
+                <td class="text-center">7,5</td>
+                <td class="text-center">7,0</td>
+                <td class="text-center font-semibold">7,0</td>
+                <td class="text-center">88%</td>
+                <td><span class="status-badge status-approved">Aprovado</span></td>
+              </tr>
+              <tr>
+                <td class="font-semibold">Arte</td>
+                <td class="text-center">5,0</td>
+                <td class="text-center">5,5</td>
+                <td class="text-center">6,0</td>
+                <td class="text-center">5,5</td>
+                <td class="text-center font-semibold">5,5</td>
+                <td class="text-center">80%</td>
+                <td>
+                  <span class="status-badge status-failed">Reprovado</span>
+                  <span class="status-subtext">Média abaixo de 6,0</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold">Educação Física</td>
+                <td class="text-center">8,0</td>
+                <td class="text-center">8,5</td>
+                <td class="text-center">7,5</td>
+                <td class="text-center">8,0</td>
+                <td class="text-center font-semibold">8,0</td>
+                <td class="text-center">65%</td>
+                <td>
+                  <span class="status-badge status-failed">Reprovado</span>
+                  <span class="status-subtext">Presença abaixo de 70%</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="table-footer">
+            <span>8 matérias • Média aritmética dos 4 bimestres.</span>
+            <span>Dados ilustrativos • Ano encerrado</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Como funciona a aprovação</h3>
+            <span class="text-muted">Os dois critérios são obrigatórios</span>
+          </div>
+          <div style="display:flex; gap:16px; align-items:center; font-size:13px; font-weight:600;">
+            <span>Média mínima: 6,0</span>
+            <span class="text-muted">+</span>
+            <span>Presença mínima: 70%</span>
+          </div>
+          <p class="text-muted">Aprovado: média ≥ 6,0 e presença ≥ 70%. Reprovado: um ou ambos os critérios não foram atingidos.</p>
+        </div>
+
+        <div class="page-bottom-bar">
+          <span>Dúvidas sobre notas ou faltas? Procure a secretaria da escola.</span>
+          <span>Colégio Horizonte • 2026</span>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
