@@ -219,6 +219,29 @@ Garantir que MotorRegrasTest continua passando. Rodar mvn test, mostrar o result
 **Depende de:** nomes combinados na seção 2. Pode começar os diagramas já e ajustar no final conforme o código real.
 **Atenção:** o diagrama deve refletir o que foi **de fato implementado**, e não o que foi planejado.
 
+#### Situação em 25/11 (o que já está pronto para o Integrante 6)
+
+Todo o código dos três padrões já está na `main`, compilando e testado:
+
+- **Factory Method:** `modulos/usuarios` (`Usuario`, `Responsavel`, `UsuarioFactory`, `AlunoFactory`, `ProfessorFactory`, `ResponsavelFactory`).
+- **Facade:** `modulos/secretaria/SecretariaFacade.java`. O `HttpServerApp` depende só dela.
+- **Observer:** `modulos/eventos` (`EventoEscolar`, `Observador`, `PublicadorEventos` e os três observers). Os observers são registrados no construtor da `SecretariaFacade`, que chama `notificar()` depois de salvar uma nota ou presença com sucesso.
+
+A branch `docs/diagramas` foi atualizada com a `main` e não tem mais conflito. A seção "Padrões de Projeto Aplicados" e os diagramas Mermaid continuam no README. O que falta é ajustar esses textos ao código real:
+
+- [ ] `Usuario` também tem `usuarioId()`. `UsuarioFactory` também tem `identificarPerfil(email)` e `montarRespostaLogin(dados)`.
+- [ ] `SecretariaFacade.login` recebe `String email` (não um `Map`). O campo se chama `motorRegrasService`. Além dos métodos já desenhados, a fachada tem `listarTurmas`, `listarAlunosDaTurma`, `listarAvaliacoes`, `listarNotas`, `listarAulas`, `listarPresencas`, `obterRegras` e `getPublicador`.
+- [ ] A fachada usa o Factory no login: acrescentar a seta `SecretariaFacade ..> UsuarioFactory` no diagrama de classes.
+- [ ] No `HttpServerApp` o campo se chama `secretaria`, não `facade`.
+- [ ] Dependências dos observers: `ObservadorHistorico` usa o `BoletimService` (método `calcularSituacao`), e `ObservadorInfrequencia` usa o `PresencaDAO` e o `MotorRegrasService`.
+- [ ] No diagrama de sequência, a notificação é **síncrona** (acontece na mesma thread da requisição, antes da resposta). Trocar a nota "Disparo assíncrono" e mostrar que o `ObservadorInfrequencia` também recebe o evento, mas ignora `NotaLancada`.
+- [ ] Tirar o emoji do título "Padrões de Projeto Aplicados" para combinar com o resto do README.
+- [ ] Apagar `docs/DIVISAO_DE_TAREFAS.md`, que é uma cópia antiga deste arquivo. O arquivo oficial é este, em `public/diagramas/`.
+- [ ] Conferir os SVGs de 13/11 em `public/diagramas/`, porque eles foram feitos antes do código.
+- [ ] Não vai ter apresentação, então os itens de slides e de quem apresenta não precisam mais ser feitos. O `docs/APRESENTACAO.md` pode ser apagado.
+
+Para conferir o comportamento real antes de desenhar, basta rodar o sistema (README, seção "Como executar"), lançar uma nota como professor e olhar o terminal: aparecem as mensagens do `ObservadorResponsavel`, do `ObservadorHistorico` e, quando há falta, do `ObservadorInfrequencia`.
+
 <details>
 <summary>Prompt para o Claude Code</summary>
 
