@@ -30,6 +30,12 @@
     --danger: #d93025;
     --danger-bg: #fce8e6;
 
+    /* Texto sobre o azul principal e bordas dos avisos */
+    --on-primary: #ffffff;
+    --alert-warning-line: #fde293;
+    --alert-danger-line: #f6aea9;
+    --alert-info-line: #aecbfa;
+
     /* Faixa do cartao da turma */
     --banner-bg: #1967d2;
     --banner-shape: rgba(255, 255, 255, 0.14);
@@ -47,7 +53,53 @@
     --shadow-2: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
     --topbar-h: 64px;
     --sidebar-w: 300px;
+    color-scheme: light;
 }
+
+/* Tema escuro: so redefine os tokens, os componentes continuam iguais */
+:root[data-theme="dark"] {
+    --app-bg: #1f1f1f;
+    --surface: #1f1f1f;
+    --surface-2: #28292c;
+    --surface-3: #303134;
+    --line: #3c4043;
+    --line-strong: #5f6368;
+
+    --text-primary: #e8eaed;
+    --text-secondary: #bdc1c6;
+    --text-muted: #9aa0a6;
+
+    --primary: #8ab4f8;
+    --primary-strong: #aecbfa;
+    --primary-light: rgba(138, 180, 248, 0.16);
+    --success: #81c995;
+    --success-bg: rgba(129, 201, 149, 0.16);
+    --warning: #fdd663;
+    --warning-bg: rgba(253, 214, 99, 0.12);
+    --danger: #f28b82;
+    --danger-bg: rgba(242, 139, 130, 0.14);
+
+    --on-primary: #202124;
+    --alert-warning-line: rgba(253, 214, 99, 0.3);
+    --alert-danger-line: rgba(242, 139, 130, 0.35);
+    --alert-info-line: rgba(138, 180, 248, 0.35);
+
+    --banner-bg: #1a56b8;
+    --banner-shape: rgba(255, 255, 255, 0.1);
+
+    --nav-active-bg: rgba(138, 180, 248, 0.18);
+    --nav-active-text: #d2e3fc;
+    --nav-hover-bg: rgba(232, 234, 237, 0.06);
+
+    --shadow-1: 0 1px 2px 0 rgba(0, 0, 0, 0.6), 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 1px 3px 0 rgba(0, 0, 0, 0.6), 0 4px 8px 3px rgba(0, 0, 0, 0.3);
+    color-scheme: dark;
+}
+
+/* Botao de tema: mostra a lua no claro e o sol no escuro */
+.ico-sol { display: none; }
+:root[data-theme="dark"] .ico-sol { display: inline; }
+:root[data-theme="dark"] .ico-lua { display: none; }
 
 * {
     margin: 0;
@@ -110,7 +162,7 @@ a:hover { text-decoration: underline; }
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background: var(--success);
+    background: #188038;
     color: #fff;
 }
 
@@ -344,8 +396,8 @@ body.sidebar-collapsed .nav-item { padding-left: 1.75rem; }
         linear-gradient(120deg, transparent 58%, rgba(255, 255, 255, 0.08) 58% 70%, transparent 70%);
 }
 
-.class-banner.verde { --banner-bg: #137333; }
-.class-banner.laranja { --banner-bg: #c26401; }
+.class-banner.verde { background-color: #137333; }
+.class-banner.laranja { background-color: #b45a00; }
 
 .class-banner h1 {
     font-size: 2.25rem;
@@ -648,7 +700,7 @@ input[type="checkbox"] {
 }
 
 .btn .lucide { width: 18px; height: 18px; }
-.btn-primary, .btn-success { background: var(--primary); color: #fff; }
+.btn-primary, .btn-success { background: var(--primary); color: var(--on-primary); }
 .btn-primary:hover, .btn-success:hover { background: var(--primary-strong); box-shadow: var(--shadow-1); }
 .btn-secondary { background: var(--surface); color: var(--primary); border-color: var(--line); }
 .btn-secondary:hover { background: var(--primary-light); }
@@ -668,11 +720,11 @@ input[type="checkbox"] {
 }
 
 .alert strong { display: block; color: var(--text-primary); font-weight: 500; }
-.alert-warning { background: var(--warning-bg); border-color: #fde293; }
+.alert-warning { background: var(--warning-bg); border-color: var(--alert-warning-line); }
 .alert-warning > .lucide { color: var(--warning); }
-.alert-danger { background: var(--danger-bg); border-color: #f6aea9; }
+.alert-danger { background: var(--danger-bg); border-color: var(--alert-danger-line); }
 .alert-danger > .lucide { color: var(--danger); }
-.alert-info { background: var(--primary-light); border-color: #aecbfa; }
+.alert-info { background: var(--primary-light); border-color: var(--alert-info-line); }
 .alert p { margin-top: 0.15rem; }
 
 .info-list {
@@ -787,10 +839,10 @@ input[type="checkbox"] {
 
 .icon-lg { width: 1.6rem; height: 1.6rem; }
 
-.swal2-popup { font-family: inherit !important; border-radius: 8px !important; }
+.swal2-popup { font-family: inherit !important; border-radius: 8px !important; background: var(--surface-2) !important; }
 .swal2-title { font-weight: 400 !important; color: var(--text-primary) !important; }
 .swal2-html-container { color: var(--text-muted) !important; }
-.swal2-confirm { border-radius: 999px !important; background: var(--primary) !important; }
+.swal2-confirm { border-radius: 999px !important; background: var(--primary) !important; color: var(--on-primary) !important; }
 
 .datatable-wrapper .datatable-container { border-bottom: none !important; }
 .datatable-wrapper .datatable-top,

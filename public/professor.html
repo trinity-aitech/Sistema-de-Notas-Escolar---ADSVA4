@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Professor - Notas e Chamada</title>
-    <link rel="stylesheet" href="css/styles.css?v=4">
+    <link rel="stylesheet" href="css/styles.css?v=5">
+    <script src="js/tema.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -26,6 +27,10 @@
                 <span class="avatar" data-avatar>CS</span>
                 <span class="user-name" id="userName">Prof. Carlos Silva</span>
             </div>
+            <button class="icon-btn" id="temaToggle" type="button" title="Alternar tema">
+                <i data-lucide="moon" class="ico-lua"></i>
+                <i data-lucide="sun" class="ico-sol"></i>
+            </button>
             <button class="icon-btn" title="Sair" onclick="window.schoolApi.logout()"><i data-lucide="log-out"></i></button>
         </div>
     </header>
