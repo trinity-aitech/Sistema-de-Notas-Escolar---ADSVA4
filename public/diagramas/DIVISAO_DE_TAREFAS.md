@@ -119,9 +119,9 @@ Comentar a classe com o papel Facade. Sem emojis nem travessões. Rodar mvn test
 **Entrega:** pacote `modulos.eventos` com a estrutura base do padrão.
 
 **Tarefas:**
-- [ ] Criar `EventoEscolar` (sealed interface ou record) com `NotaLancada(matriculaId, avaliacaoId, valor)` e `PresencaRegistrada(matriculaId, aulaId, presente)`.
-- [ ] Criar a interface `Observador` com `void atualizar(EventoEscolar e)`.
-- [ ] Criar `PublicadorEventos` (o Subject) com `adicionarObservador`, `removerObservador` e `notificar`.
+- [x] Criar `EventoEscolar` (sealed interface ou record) com `NotaLancada(matriculaId, avaliacaoId, valor)` e `PresencaRegistrada(matriculaId, aulaId, presente)`.
+- [x] Criar a interface `Observador` com `void atualizar(EventoEscolar e)`.
+- [x] Criar `PublicadorEventos` (o Subject) com `adicionarObservador`, `removerObservador` e `notificar`.
 - [ ] Tornar a lista de observers segura para uso com Virtual Threads (o servidor usa uma thread por requisição).
 - [ ] Integrar com a `SecretariaFacade`: chamar `notificar()` somente quando `salvarNota` ou `salvarPresenca` retornar `true`, e registrar os observers no construtor da fachada (combinar com os Integrantes 2 e 4).
 
