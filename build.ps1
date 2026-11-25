@@ -12,7 +12,11 @@ if (-not (Test-Path "bin")) {
 }
 
 $javaFiles = Get-ChildItem -Recurse -Filter "*.java" src\main\java | ForEach-Object { $_.FullName }
-$testFiles = Get-ChildItem -Recurse -Filter "*.java" src\test\java | ForEach-Object { $_.FullName }
+# Testes JUnit (como o UsuarioFactoryTest) precisam do Maven: rode "mvn test".
+# Aqui entram so os testes que compilam com o javac puro.
+$testFiles = Get-ChildItem -Recurse -Filter "*.java" src\test\java |
+    Where-Object { -not (Select-String -Path $_.FullName -Pattern "org.junit" -Quiet) } |
+    ForEach-Object { $_.FullName }
 
 javac -encoding UTF-8 -cp "lib\postgresql-42.7.3.jar" -d bin $javaFiles
 

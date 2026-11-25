@@ -143,11 +143,17 @@ O banco tem 10 tabelas: `usuarios`, `professores`, `alunos`, `responsaveis`, `cu
     │       ├── alunos/         alunos, turmas e matrículas
     │       ├── notas/          avaliações e notas
     │       ├── presenca/       aulas e presenças
-    │       ├── eventos/        padrão Observer (eventos e publicador)
+    │       ├── eventos/        padrão Observer (eventos, publicador e observers)
+    │       ├── secretaria/     padrão Facade (SecretariaFacade)
+    │       ├── usuarios/       padrão Factory Method (usuários e fábricas)
     │       └── regras/         motor de regras (LDB e regimento) e boletim
     └── test/java/br/com/escola/
-        └── modulos/regras/MotorRegrasTest.java
+        └── modulos/
+            ├── regras/MotorRegrasTest.java       testes do motor de regras
+            └── usuarios/UsuarioFactoryTest.java  testes do Factory Method (JUnit)
 ```
+
+O `build.ps1` roda os testes do motor de regras. O `UsuarioFactoryTest` usa JUnit e roda com o Maven (`mvn test`) ou pela IDE.
 
 A API tem as rotas `/api/auth/login`, `/api/turmas`, `/api/turmas/alunos`, `/api/avaliacoes`, `/api/notas`, `/api/aulas`, `/api/presencas`, `/api/boletim` e `/api/regras`.
 
