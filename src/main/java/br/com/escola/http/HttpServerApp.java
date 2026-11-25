@@ -14,6 +14,7 @@ import br.com.escola.modulos.presenca.PresencaDAO;
 import br.com.escola.modulos.regras.BoletimDTO;
 import br.com.escola.modulos.regras.BoletimService;
 import br.com.escola.modulos.regras.MotorRegrasService;
+import br.com.escola.modulos.usuarios.UsuarioFactory;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -87,27 +88,17 @@ public class HttpServerApp {
             Map<String, String> data = JsonUtils.parseSimpleJson(body);
             String email = data.getOrDefault("email", "carlos.silva@escola.com");
 
-            // Mapeamento simples de usuário por email para o login demonstrativo
-            Map<String, Object> resp = new LinkedHashMap<>();
-            if (email.contains("carlos") || email.contains("prof")) {
-                resp.put("id", "22222222-2222-2222-2222-222222222222");
-                resp.put("nome", "Prof. Carlos Silva");
-                resp.put("email", email);
-                resp.put("perfil", "PROFESSOR");
-            } else if (email.contains("maria") || email.contains("responsavel")) {
-                resp.put("id", "33333333-3333-3333-3333-333333333333");
-                resp.put("nome", "Maria Mendes");
-                resp.put("email", email);
-                resp.put("perfil", "RESPONSAVEL");
-                resp.put("alunoVinculadoId", "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb01");
-            } else {
-                resp.put("id", "44444444-4444-4444-4444-444444444444");
-                resp.put("nome", "Lucas Mendes");
-                resp.put("email", email);
-                resp.put("perfil", "ALUNO");
-                resp.put("alunoId", "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb01");
+            // Factory Method: o perfil escolhe a fabrica, e a fabrica cria o usuario certo.
+            // Apenas o e-mail digitado e repassado; os demais dados vem da fabrica.
+            Map<String, String> dados = new HashMap<>();
+            dados.put("email", email);
+            try {
+                String perfil = UsuarioFactory.identificarPerfil(email);
+                UsuarioFactory fabrica = UsuarioFactory.obterFabrica(perfil);
+                responderJson(exchange, 200, fabrica.montarRespostaLogin(dados));
+            } catch (IllegalArgumentException e) {
+                responderJson(exchange, 400, Map.of("erro", e.getMessage()));
             }
-            responderJson(exchange, 200, resp);
         } else {
             responderJson(exchange, 405, Map.of("erro", "Método não permitido"));
         }
