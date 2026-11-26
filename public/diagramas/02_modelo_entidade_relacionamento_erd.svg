@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1350 900" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
+    </marker>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <rect width="1350" height="900" fill="#0f172a"/>
+
+  <!-- Título -->
+  <text x="50" y="45" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700">Diagrama Entidade-Relacionamento (ERD) - PostgreSQL / Supabase</text>
+  <text x="50" y="70" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="14">Modelo de dados relacional em 3ª Forma Normal com integridade referencial</text>
+
+  <!-- Linha 1: Usuários, Perfis e Atores -->
+  <!-- Tabela usuarios -->
+  <g transform="translate(50, 95)" filter="url(#cardShadow)">
+    <rect width="260" height="175" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="260" height="30" rx="8" fill="#2563eb"/>
+    <rect y="20" width="260" height="10" fill="#2563eb"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">usuarios</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#cbd5e1" font-family="monospace" font-size="12">   nome (VARCHAR 150)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-family="monospace" font-size="12">   email (UNIQUE)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   senha_hash</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   perfil (CHECK)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-family="monospace" font-size="12">   ativo (BOOLEAN)</text>
+  </g>
+
+  <!-- Tabela professores -->
+  <g transform="translate(370, 95)" filter="url(#cardShadow)">
+    <rect width="270" height="135" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#2563eb"/>
+    <rect y="20" width="270" height="10" fill="#2563eb"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">professores</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK usuario_id (UUID)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-family="monospace" font-size="12">   matricula_funcional</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   formacao</text>
+  </g>
+
+  <!-- Tabela responsaveis -->
+  <g transform="translate(700, 95)" filter="url(#cardShadow)">
+    <rect width="270" height="135" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#2563eb"/>
+    <rect y="20" width="270" height="10" fill="#2563eb"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">responsaveis</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK usuario_id (UUID)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-family="monospace" font-size="12">   telefone</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   parentesco</text>
+  </g>
+
+  <!-- Tabela alunos -->
+  <g transform="translate(1030, 95)" filter="url(#cardShadow)">
+    <rect width="270" height="155" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#2563eb"/>
+    <rect y="20" width="270" height="10" fill="#2563eb"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">alunos</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK usuario_id (UUID)</text>
+    <text x="15" y="92" fill="#60a5fa" font-family="monospace" font-size="12">FK responsavel_id (UUID)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   matricula (UNIQUE)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   data_nascimento</text>
+  </g>
+
+  <!-- Linha 2: Estrutura Escolar e Turmas -->
+  <!-- Tabela turmas -->
+  <g transform="translate(50, 320)" filter="url(#cardShadow)">
+    <rect width="260" height="155" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="260" height="30" rx="8" fill="#0284c7"/>
+    <rect y="20" width="260" height="10" fill="#0284c7"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">turmas</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#cbd5e1" font-family="monospace" font-size="12">   codigo (VARCHAR)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-family="monospace" font-size="12">   ano_letivo (INT)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   serie</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   turno (CHECK)</text>
+  </g>
+
+  <!-- Tabela disciplinas -->
+  <g transform="translate(370, 320)" filter="url(#cardShadow)">
+    <rect width="270" height="135" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#0284c7"/>
+    <rect y="20" width="270" height="10" fill="#0284c7"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">disciplinas</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#cbd5e1" font-family="monospace" font-size="12">   codigo (UNIQUE)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-family="monospace" font-size="12">   nome</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   carga_horaria</text>
+  </g>
+
+  <!-- Tabela turma_disciplinas -->
+  <g transform="translate(700, 320)" filter="url(#cardShadow)">
+    <rect width="270" height="140" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#0284c7"/>
+    <rect y="20" width="270" height="10" fill="#0284c7"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">turma_disciplinas</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK turma_id (UUID)</text>
+    <text x="15" y="92" fill="#60a5fa" font-family="monospace" font-size="12">FK disciplina_id (UUID)</text>
+    <text x="15" y="112" fill="#60a5fa" font-family="monospace" font-size="12">FK professor_id (UUID)</text>
+  </g>
+
+  <!-- Tabela matriculas -->
+  <g transform="translate(1030, 320)" filter="url(#cardShadow)">
+    <rect width="270" height="155" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#0284c7"/>
+    <rect y="20" width="270" height="10" fill="#0284c7"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">matriculas</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK aluno_id (UUID)</text>
+    <text x="15" y="92" fill="#60a5fa" font-family="monospace" font-size="12">FK turma_id (UUID)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   numero_chamada</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   status (CHECK)</text>
+  </g>
+
+  <!-- Linha 3: Avaliações, Notas, Aulas e Presenças -->
+  <!-- Tabela avaliacoes -->
+  <g transform="translate(50, 550)" filter="url(#cardShadow)">
+    <rect width="260" height="175" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="260" height="30" rx="8" fill="#16a34a"/>
+    <rect y="20" width="260" height="10" fill="#16a34a"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">avaliacoes</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK turma_disciplina_id</text>
+    <text x="15" y="92" fill="#cbd5e1" font-family="monospace" font-size="12">   periodo (1-4)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   tipo (PROVA/REC)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   peso / nota_maxima</text>
+    <text x="15" y="152" fill="#cbd5e1" font-family="monospace" font-size="12">   data_avaliacao</text>
+  </g>
+
+  <!-- Tabela notas -->
+  <g transform="translate(370, 550)" filter="url(#cardShadow)">
+    <rect width="270" height="145" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#16a34a"/>
+    <rect y="20" width="270" height="10" fill="#16a34a"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">notas</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK avaliacao_id (UUID)</text>
+    <text x="15" y="92" fill="#60a5fa" font-family="monospace" font-size="12">FK matricula_id (UUID)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   valor_nota (NUMERIC)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   observacao</text>
+  </g>
+
+  <!-- Tabela aulas -->
+  <g transform="translate(700, 550)" filter="url(#cardShadow)">
+    <rect width="270" height="145" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#d97706"/>
+    <rect y="20" width="270" height="10" fill="#d97706"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">aulas</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK turma_disciplina_id</text>
+    <text x="15" y="92" fill="#cbd5e1" font-family="monospace" font-size="12">   data_aula (DATE)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   quantidade_horas</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   conteudo_lecionado</text>
+  </g>
+
+  <!-- Tabela presencas -->
+  <g transform="translate(1030, 550)" filter="url(#cardShadow)">
+    <rect width="270" height="145" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="270" height="30" rx="8" fill="#d97706"/>
+    <rect y="20" width="270" height="10" fill="#d97706"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">presencas</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID)</text>
+    <text x="15" y="72" fill="#60a5fa" font-family="monospace" font-size="12">FK aula_id (UUID)</text>
+    <text x="15" y="92" fill="#60a5fa" font-family="monospace" font-size="12">FK matricula_id (UUID)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-family="monospace" font-size="12">   presente (BOOLEAN)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-family="monospace" font-size="12">   justificativa</text>
+  </g>
+
+  <!-- Linha 4: Regras e Resultados Finais -->
+  <!-- Tabela regras_escola -->
+  <g transform="translate(50, 755)" filter="url(#cardShadow)">
+    <rect width="590" height="110" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="590" height="30" rx="8" fill="#dc2626"/>
+    <rect y="20" width="590" height="10" fill="#dc2626"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">regras_escola</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID) | chave VARCHAR(50) (UNIQUE) | valor VARCHAR(100) | descricao TEXT</text>
+    <text x="15" y="74" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="11">Ex: 'ldb.frequencia_minima_percentual' = 75.0, 'escola.media_aprovacao_direta' = 7.0</text>
+    <text x="15" y="92" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="11">Ex: 'escola.media_minima_recuperacao' = 4.0, 'escola.media_final_com_recuperacao' = 5.0</text>
+  </g>
+
+  <!-- Tabela resultados_finais -->
+  <g transform="translate(700, 755)" filter="url(#cardShadow)">
+    <rect width="600" height="110" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="600" height="30" rx="8" fill="#dc2626"/>
+    <rect y="20" width="600" height="10" fill="#dc2626"/>
+    <text x="15" y="21" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">resultados_finais</text>
+    <text x="15" y="52" fill="#fbbf24" font-family="monospace" font-size="12">PK id (UUID) | FK matricula_id | FK turma_disciplina_id</text>
+    <text x="15" y="74" fill="#cbd5e1" font-family="monospace" font-size="12">   media_anual | nota_recuperacao | media_final | percentual_frequencia</text>
+    <text x="15" y="94" fill="#cbd5e1" font-family="monospace" font-size="12">   situacao (APROVADO, REPROVADO_POR_NOTA, REPROVADO_POR_FALTA, RECUPERACAO)</text>
+  </g>
+</svg>
